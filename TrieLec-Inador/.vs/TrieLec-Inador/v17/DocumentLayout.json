@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Usuario1\\source\\repos\\TrieLec-Inador\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D1ACC108-4B8F-455B-B0A6-8DD7868F65ED}|TrieLec-Inador\\TrieLec-Inador.vcxproj|C:\\Users\\Usuario1\\source\\repos\\TrieLec-Inador\\TrieLec-Inador\\TrieLec-Inador.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D1ACC108-4B8F-455B-B0A6-8DD7868F65ED}|TrieLec-Inador\\TrieLec-Inador.vcxproj|solutionrelative:TrieLec-Inador\\TrieLec-Inador.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TrieLec-Inador.cpp",
+              "DocumentMoniker": "C:\\Users\\Usuario1\\source\\repos\\TrieLec-Inador\\TrieLec-Inador\\TrieLec-Inador.cpp",
+              "RelativeDocumentMoniker": "TrieLec-Inador\\TrieLec-Inador.cpp",
+              "ToolTip": "C:\\Users\\Usuario1\\source\\repos\\TrieLec-Inador\\TrieLec-Inador\\TrieLec-Inador.cpp",
+              "RelativeToolTip": "TrieLec-Inador\\TrieLec-Inador.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-27T18:21:32.924Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
