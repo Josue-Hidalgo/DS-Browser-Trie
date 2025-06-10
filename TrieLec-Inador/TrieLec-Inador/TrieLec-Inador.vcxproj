@@ -140,6 +140,7 @@
     <ClInclude Include="List.h" />
     <ClInclude Include="MaxHeap.h" />
     <ClInclude Include="PriorityQueue.h" />
+    <ClInclude Include="SNode.h" />
     <ClInclude Include="SortedDLinkedList.h" />
     <ClInclude Include="SplayTree.h" />
     <ClInclude Include="Trie.h" />

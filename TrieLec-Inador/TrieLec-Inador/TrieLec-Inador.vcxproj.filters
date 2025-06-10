@@ -28,6 +28,12 @@
     <Filter Include="Archivos de encabezado\Tupla">
       <UniqueIdentifier>{34e911ff-15bf-4803-8138-d1993d0c46b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Nodos">
+      <UniqueIdentifier>{4c28bf3f-24c6-4738-a1e6-bd2c0b685fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Macros">
+      <UniqueIdentifier>{fadfbe64-3791-422c-9d2a-cfcd937266c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TrieLec-Inador.cpp">
@@ -35,16 +41,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Def.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="ArrayList.h">
       <Filter>Archivos de encabezado\Listas</Filter>
     </ClInclude>
     <ClInclude Include="DLinkedList.h">
-      <Filter>Archivos de encabezado\Listas</Filter>
-    </ClInclude>
-    <ClInclude Include="DNode.h">
       <Filter>Archivos de encabezado\Listas</Filter>
     </ClInclude>
     <ClInclude Include="List.h">
@@ -74,8 +74,17 @@
     <ClInclude Include="Trie.h">
       <Filter>Archivos de encabezado\Árboles</Filter>
     </ClInclude>
+    <ClInclude Include="SNode.h">
+      <Filter>Archivos de encabezado\Nodos</Filter>
+    </ClInclude>
     <ClInclude Include="TrieNode.h">
-      <Filter>Archivos de encabezado\Árboles</Filter>
+      <Filter>Archivos de encabezado\Nodos</Filter>
+    </ClInclude>
+    <ClInclude Include="DNode.h">
+      <Filter>Archivos de encabezado\Nodos</Filter>
+    </ClInclude>
+    <ClInclude Include="Def.h">
+      <Filter>Archivos de encabezado\Macros</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
