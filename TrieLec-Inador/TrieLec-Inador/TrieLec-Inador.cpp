@@ -17,6 +17,7 @@
 #include <stdexcept>
 #include <ctime>
 #include <fstream>
+#include <Windows.h>
 
 // Clases 
 
@@ -115,6 +116,12 @@ static void processLinePerLine(ifstream& file) {
 }
 
 int main() {
+	// Imprimir caracteres con tildes y más 
+	setlocale(LC_ALL, "spanish");
+	// Leer/Escribir caracteres con tildes y más 
+	SetConsoleCP(1252);
+	SetConsoleOutputCP(1252);
+
 	// 1. Al iniciar el programa se imprime un mensaje de bienvenida muy corto que explica el propósito del programa.
 	printWelcomeMessage();
 	waitAndJump();

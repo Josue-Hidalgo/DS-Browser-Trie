@@ -71,5 +71,11 @@
     <ClInclude Include="SortedDLinkedList.h">
       <Filter>Archivos de encabezado\Listas</Filter>
     </ClInclude>
+    <ClInclude Include="Trie.h">
+      <Filter>Archivos de encabezado\Árboles</Filter>
+    </ClInclude>
+    <ClInclude Include="TrieNode.h">
+      <Filter>Archivos de encabezado\Árboles</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -142,6 +142,8 @@
     <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="SortedDLinkedList.h" />
     <ClInclude Include="SplayTree.h" />
+    <ClInclude Include="Trie.h" />
+    <ClInclude Include="TrieNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
