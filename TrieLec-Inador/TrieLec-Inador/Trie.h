@@ -18,6 +18,7 @@
 #include <iostream>
 #include <stdexcept>
 #include "TrieNode.h"
+#include "SortedDLinkedList.h"
 
 using std::string;
 using std::cout;
@@ -47,6 +48,22 @@ private:
 		delete children;
 	}
 
+	void getMatchesPrefixAux(TrieNode* current, string prefix, List<KVPair<string, int>>* matches) {
+		
+		if (current->isFinal) { // Caso Base: final de palabra
+			KVPair<string, int> pair(prefix, current->lines->getSize());
+			matches->append(pair);
+		}
+
+		List<char>* children = current->getChildren();
+		for (children->goToStart(); !children->atEnd(); children->next()) {
+			char c = children->getElement();
+			TrieNode* child = current->getChild(c);
+			getMatchesPrefixAux(child, prefix + c, matches);
+		}
+		delete children;
+	}
+	
 	void getMatchesAux(TrieNode* current, string prefix, List<string>* matches) {
 		if (current->isFinal)
 			matches->append(prefix);
@@ -131,18 +148,51 @@ public:
 		clearAux(root);
 		root = new TrieNode();
 	}
-
+	
 	List<string>* getMatches(string prefix) {
 		List<string>* matches = new DLinkedList<string>();
+
 		TrieNode* current = findNode(prefix);
 		if (current != nullptr)
 			getMatchesAux(current, prefix, matches);
 		return matches;
 	}
 
+	List<KVPair<string, int>>* getMatchesPrefix(string prefix) { // Consulta por Prefijo
+		List<KVPair<string, int>>* matches = new SortedDLinkedList<KVPair<string, int>>();
+		TrieNode* current = findNode(prefix);
+		if (current != nullptr)
+			getMatchesPrefixAux(current, prefix, matches);
+		return matches;
+	}
+
+	List<int>* getListLines(string word) { // Cantidad de veces (getSize) y número de lineas 
+		if (!containsWord(word)) 
+			return nullptr;
+		TrieNode* current = findNode(word);
+		return current->lines;
+	}
+
 	void print() {
 		List<string>* words = getMatches("");
 		words->print();
+		delete words;
+	}
+
+	void printWordsWithLines() {
+		List<string>* words = getMatches("");
+		for (words->goToStart(); !words->atEnd(); words->next()) {
+			string word = words->getElement();
+			TrieNode* node = findNode(word);
+			cout << word << ": ";
+			// Imprimir las líneas
+			for (node->lines->goToStart(); !node->lines->atEnd(); node->lines->next()) {
+				cout << node->lines->getElement();
+				if (!node->lines->atEnd()) // Si no es el último elemento
+					cout << ", ";
+			}
+			cout << endl;
+		}
 		delete words;
 	}
 };
