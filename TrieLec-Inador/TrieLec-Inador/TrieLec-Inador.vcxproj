@@ -129,6 +129,20 @@
   <ItemGroup>
     <ClCompile Include="TrieLec-Inador.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ArrayList.h" />
+    <ClInclude Include="Def.h" />
+    <ClInclude Include="Dictionary.h" />
+    <ClInclude Include="DLinkedList.h" />
+    <ClInclude Include="DNode.h" />
+    <ClInclude Include="HeapPriorityQueue.h" />
+    <ClInclude Include="KVPair.h" />
+    <ClInclude Include="List.h" />
+    <ClInclude Include="MaxHeap.h" />
+    <ClInclude Include="PriorityQueue.h" />
+    <ClInclude Include="SortedDLinkedList.h" />
+    <ClInclude Include="SplayTree.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

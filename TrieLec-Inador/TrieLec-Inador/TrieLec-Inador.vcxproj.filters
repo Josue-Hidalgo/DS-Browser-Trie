@@ -13,10 +13,63 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de encabezado\Listas">
+      <UniqueIdentifier>{498da455-cf68-48cc-9c9d-e7c7f96fcafd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Diccionarios">
+      <UniqueIdentifier>{0c6cfa65-5ff1-4cf3-82cb-8635d8dbd7e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Árboles">
+      <UniqueIdentifier>{7d6a75cf-10c9-437e-88ad-12262861c37b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Prioridad">
+      <UniqueIdentifier>{b3246e11-d334-4ed9-a0ff-b001f6715e56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Tupla">
+      <UniqueIdentifier>{34e911ff-15bf-4803-8138-d1993d0c46b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TrieLec-Inador.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Def.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrayList.h">
+      <Filter>Archivos de encabezado\Listas</Filter>
+    </ClInclude>
+    <ClInclude Include="DLinkedList.h">
+      <Filter>Archivos de encabezado\Listas</Filter>
+    </ClInclude>
+    <ClInclude Include="DNode.h">
+      <Filter>Archivos de encabezado\Listas</Filter>
+    </ClInclude>
+    <ClInclude Include="List.h">
+      <Filter>Archivos de encabezado\Listas</Filter>
+    </ClInclude>
+    <ClInclude Include="Dictionary.h">
+      <Filter>Archivos de encabezado\Diccionarios</Filter>
+    </ClInclude>
+    <ClInclude Include="SplayTree.h">
+      <Filter>Archivos de encabezado\Árboles</Filter>
+    </ClInclude>
+    <ClInclude Include="MaxHeap.h">
+      <Filter>Archivos de encabezado\Árboles</Filter>
+    </ClInclude>
+    <ClInclude Include="HeapPriorityQueue.h">
+      <Filter>Archivos de encabezado\Prioridad</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>Archivos de encabezado\Prioridad</Filter>
+    </ClInclude>
+    <ClInclude Include="KVPair.h">
+      <Filter>Archivos de encabezado\Tupla</Filter>
+    </ClInclude>
+    <ClInclude Include="SortedDLinkedList.h">
+      <Filter>Archivos de encabezado\Listas</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
