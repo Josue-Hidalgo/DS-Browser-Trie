@@ -86,5 +86,8 @@
     <ClInclude Include="Def.h">
       <Filter>Archivos de encabezado\Macros</Filter>
     </ClInclude>
+    <ClInclude Include="SplayTreeDictionary.h">
+      <Filter>Archivos de encabezado\Diccionarios</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

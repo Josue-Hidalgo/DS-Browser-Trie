@@ -19,6 +19,7 @@
 #include <stdexcept>
 #include "TrieNode.h"
 #include "SortedDLinkedList.h"
+#include "SplayTreeDictionary.h"
 
 using std::string;
 using std::cout;
@@ -49,10 +50,9 @@ private:
 	}
 
 	void getMatchesPrefixAux(TrieNode* current, string prefix, List<KVPair<string, int>>* matches) {
-		
 		if (current->isFinal) { // Caso Base: final de palabra
-			KVPair<string, int> pair(prefix, current->lines->getSize());
-			matches->append(pair);
+			KVPair<string, int> pair(prefix, current->lines->getSize()); // Pair (Prefijo, Cantidad en Texto)
+			matches->append(pair); 
 		}
 
 		List<char>* children = current->getChildren();
@@ -159,7 +159,7 @@ public:
 	}
 
 	List<KVPair<string, int>>* getMatchesPrefix(string prefix) { // Consulta por Prefijo
-		List<KVPair<string, int>>* matches = new SortedDLinkedList<KVPair<string, int>>();
+		List<KVPair<string, int>>* matches = new DLinkedList<KVPair<string, int>>();
 		TrieNode* current = findNode(prefix);
 		if (current != nullptr)
 			getMatchesPrefixAux(current, prefix, matches);
@@ -167,8 +167,8 @@ public:
 	}
 
 	List<int>* getListLines(string word) { // Cantidad de veces (getSize) y número de lineas 
-		if (!containsWord(word)) 
-			return nullptr;
+		if (!containsWord(word))
+			throw runtime_error("Word was not found.");
 		TrieNode* current = findNode(word);
 		return current->lines;
 	}

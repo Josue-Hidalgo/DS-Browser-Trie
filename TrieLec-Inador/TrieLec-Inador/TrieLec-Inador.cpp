@@ -8,7 +8,8 @@
  * 
  * Equipo de Trabajo:
  * - Josue Santiago Hidalgo Sandoval
- * 
+ * - Marvin
+ * - Sebastián
  */
 
  // Importar las librerías necesarias
@@ -30,6 +31,8 @@ using std::getline;
 using std::string;
 using std::ifstream;
 using std::invalid_argument;
+using std::runtime_error;
+using std::ofstream;
 using std::ios_base;
 
 /*AUXILIARIES*/
@@ -102,8 +105,9 @@ static void printWelcomeMessage() {
 
 /*FILE MANAGEMENT*/
 static void openFile(ifstream& file, string name) {
-	file.exceptions(ifstream::badbit); // Habilitamos exceptions
 	file.open(name); // Abrimos el archivo que pedimos al usuario
+	if (!file.is_open())
+		throw runtime_error("File was imposible to open.");
 }
 static void closeFile(ifstream& file) {
 	file.close(); // Cerramos el archivo
@@ -114,13 +118,19 @@ static void processLinePerLine(ifstream& file) {
 		// PENDIENTE ALMACENAR LINEA EN UNA ESTRUCTURA DE RAPIDO ACCESO ()
 	}
 }
+static void processLinePerLineIgnore(ifstream& file) {
+	string line;
+	while (getline(file, line)) {
+		// PENDIENTE ALMACENAR LINEA EN UNA ESTRUCTURA DE RAPIDO ACCESO ()
+	}
+}
 
 int main() {
-	// Imprimir caracteres con tildes y más 
+	/*
 	setlocale(LC_ALL, "spanish");
-	// Leer/Escribir caracteres con tildes y más 
 	SetConsoleCP(1252);
 	SetConsoleOutputCP(1252);
+	*/
 
 	// 1. Al iniciar el programa se imprime un mensaje de bienvenida muy corto que explica el propósito del programa.
 	printWelcomeMessage();
@@ -133,18 +143,25 @@ int main() {
 
 	// 3. Si el archivo no existe o no es posible abrirlo, se indica un mensaje de error y el programa termina.
 	ifstream file; // Creamos objeto archivo de tipo ifstream
+	ifstream ignoreFile; // Creamos objeto archivo de tipo ifstream para el ignore.txt
+
+	ofstream outputFile; // Objeto archivo que usaremos en caso de que se requiera un output por archivo.
+	
 	try {
 		openFile(file, fileName);
+		
 
 		// 4. Si no, se abre el archivo y es procesado línea por línea. La línea original leída debe almacenarse en una
 		// estructura de rápido acceso que permita localizar el texto de la línea en caso de que se requiera
 		// imprimirla.
 		processLinePerLine(file);
-		
+		processLinePerLineIgnore(ignoreFile);
+
+
 		closeFile(file);
-	} catch (const ios_base::failure& e){
-		cout << "ERROR: NO se pudo abrir el archivo." << endl;
-		cout << "Detalle: " << e.what() << endl;
+	} catch (const runtime_error& e){
+		cout << "ERROR: Runtime Error." << endl;
+		cout << "Detail: " << e.what() << endl;
 	}
 	return 0;
 }
