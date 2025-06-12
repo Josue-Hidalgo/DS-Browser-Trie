@@ -1,15 +1,3 @@
-/*
- *
- * Nombre de Archivo: DNode.h
- *
- * Descripción General:
- *
- * Nodo que nos ayuda a implementar Doubly Linked List y otras estructuras.
- *
- * Autor: Mauricio Avilés
- *
- */
-
 #pragma once
 
 template <typename E>
@@ -19,15 +7,14 @@ public:
 	DNode<E>* next;
 	DNode<E>* previous;
 
-	DNode(E element, DNode<E>* next = nullptr, DNode<E>* previous = nullptr) {
+	DNode(E element, DNode<E>* next, DNode<E>* previous)  {
 		this->element = element;
 		this->next = next;
 		this->previous = previous;
 	}
-
-	DNode(DNode<E>* next = nullptr, DNode<E>* previous = nullptr) {
+	DNode(DNode<E>* next, DNode<E>* previous) {
 		this->next = next;
 		this->previous = previous;
 	}
-
 };
+

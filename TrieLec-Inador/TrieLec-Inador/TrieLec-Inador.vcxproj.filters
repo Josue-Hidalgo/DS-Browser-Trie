@@ -34,6 +34,9 @@
     <Filter Include="Archivos de encabezado\Macros">
       <UniqueIdentifier>{fadfbe64-3791-422c-9d2a-cfcd937266c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de recursos\Archivos de Texto">
+      <UniqueIdentifier>{c9505943-4009-4e37-98cb-b6e84282dd5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TrieLec-Inador.cpp">
@@ -89,5 +92,37 @@
     <ClInclude Include="SplayTreeDictionary.h">
       <Filter>Archivos de encabezado\Diccionarios</Filter>
     </ClInclude>
+    <ClInclude Include="HashTable.h">
+      <Filter>Archivos de encabezado\Diccionarios</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Libros\AturoGordonPym.txt">
+      <Filter>Archivos de recursos\Archivos de Texto</Filter>
+    </Text>
+    <Text Include="Libros\Centeno.txt">
+      <Filter>Archivos de recursos\Archivos de Texto</Filter>
+    </Text>
+    <Text Include="Libros\Confesiones.txt">
+      <Filter>Archivos de recursos\Archivos de Texto</Filter>
+    </Text>
+    <Text Include="Libros\ignorar.txt">
+      <Filter>Archivos de recursos\Archivos de Texto</Filter>
+    </Text>
+    <Text Include="Libros\LaFamilia.txt">
+      <Filter>Archivos de recursos\Archivos de Texto</Filter>
+    </Text>
+    <Text Include="Libros\Quijote.txt">
+      <Filter>Archivos de recursos\Archivos de Texto</Filter>
+    </Text>
+    <Text Include="Libros\ReyBermejo.txt">
+      <Filter>Archivos de recursos\Archivos de Texto</Filter>
+    </Text>
+    <Text Include="Libros\Tormento.txt">
+      <Filter>Archivos de recursos\Archivos de Texto</Filter>
+    </Text>
+    <Text Include="Libros\WarPeace.txt">
+      <Filter>Archivos de recursos\Archivos de Texto</Filter>
+    </Text>
   </ItemGroup>
 </Project>

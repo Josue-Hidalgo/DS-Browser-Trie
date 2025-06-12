@@ -135,6 +135,7 @@
     <ClInclude Include="Dictionary.h" />
     <ClInclude Include="DLinkedList.h" />
     <ClInclude Include="DNode.h" />
+    <ClInclude Include="HashTable.h" />
     <ClInclude Include="HeapPriorityQueue.h" />
     <ClInclude Include="KVPair.h" />
     <ClInclude Include="List.h" />
@@ -146,6 +147,17 @@
     <ClInclude Include="SplayTreeDictionary.h" />
     <ClInclude Include="Trie.h" />
     <ClInclude Include="TrieNode.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Libros\AturoGordonPym.txt" />
+    <Text Include="Libros\Centeno.txt" />
+    <Text Include="Libros\Confesiones.txt" />
+    <Text Include="Libros\ignorar.txt" />
+    <Text Include="Libros\LaFamilia.txt" />
+    <Text Include="Libros\Quijote.txt" />
+    <Text Include="Libros\ReyBermejo.txt" />
+    <Text Include="Libros\Tormento.txt" />
+    <Text Include="Libros\WarPeace.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

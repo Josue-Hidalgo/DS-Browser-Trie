@@ -1,17 +1,3 @@
-/*
- *
- * Nombre de Archivo: DLinkedList.h
- * 
- * Descripción General:
- *
- * Clase hija de List que implementa una lista doblemente enlazada. Esta funciona
- * con un nodo que tiene un puntero al siguiente nodo y otro al nodo anterior.
- * De manera que podemos recorrer la lista en ambas direcciones.
- *
- * Autor: Mauricio Avilés 
- *
- */
-
 #pragma once
 
 #include <iostream>
@@ -96,7 +82,7 @@ public:
 		current = tail->previous;
 	}
 
-	void goToPos1(int pos) {
+	void goToPos(int pos) {
 		if (pos < 0 || pos > size)
 			throw runtime_error("Index out of range");
 		current = head;
@@ -105,7 +91,7 @@ public:
 		}
 	}
 
-	void goToPos(int pos) {
+	void goToPos2(int pos) {
 		if (pos < 0 || pos > size)
 			throw runtime_error("Index out of range");
 		if (pos < size / 2) {
@@ -151,6 +137,16 @@ public:
 		return size;
 	}
 
+	bool contains(E element) {
+		goToStart();
+		while (!atEnd()) {
+			if (element == getElement())
+				return true;
+			next();
+		}
+		return false;
+	}
+
 	void print() {
 		cout << "[ ";
 		DNode<E>* temp = head->next;
@@ -164,6 +160,5 @@ public:
 			cout << "*";
 		cout << "]" << endl;
 	}
-
 };
 
