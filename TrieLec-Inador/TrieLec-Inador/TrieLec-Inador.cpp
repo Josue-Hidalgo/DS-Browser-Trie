@@ -215,7 +215,6 @@ static string normalize(const string& word) {
 	return result;
 }
 
-
 static void sort(List<KVPair<string, int>>*& list) {
 	int n = list->getSize();
 	if (n <= 1) return;
