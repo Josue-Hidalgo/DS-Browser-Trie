@@ -8,8 +8,8 @@
  *
  * Equipo de Trabajo:
  * - Josue Santiago Hidalgo Sandoval
+ * - Sebastián Masís Solano
  * - Marvin
- * - Sebastián
  */
 
  // Importar las librerías necesarias
@@ -194,8 +194,60 @@ static void lowercaseDictionary(Dictionary<char, char>*& abc) {
 }
 
 // Sort Algorithms
+
+static string normalize(const string& word) {
+	string result;
+	for (char c : word) {
+		switch (c) {
+		case 'á': case 'Á': c = 'a'; break;
+		case 'é': case 'É': c = 'e'; break;
+		case 'í': case 'Í': c = 'i'; break;
+		case 'ó': case 'Ó': c = 'o'; break;
+		case 'ú': case 'Ú': c = 'u'; break;
+		case 'ü': case 'Ü': c = 'u'; break;
+		case 'ñ': case 'Ñ': c = 'n'; break;
+		default:
+			if (c >= 'A' && c <= 'Z')
+				c = c + 32; // Convertir a minúscula
+		}
+		result += c;
+	}
+	return result;
+}
+
+
 static void sort(List<KVPair<string, int>>*& list) {
-	// Aquí podrías implementar un algoritmo como MergeSort o QuickSort personalizado si lo necesitas
+	int n = list->getSize();
+	if (n <= 1) return;
+
+	for (int gap = n / 2; gap > 0; gap /= 2) {
+		for (int i = gap; i < n; i++) {
+			list->goToPos(i);
+			KVPair<string, int> temp = list->getElement();
+			string tempKey = normalize(temp.key);
+
+			int j = i;
+			while (j >= gap) {
+				list->goToPos(j - gap);
+				KVPair<string, int> prev = list->getElement();
+				string prevKey = normalize(prev.key);
+
+				if (prevKey > tempKey) {
+					list->goToPos(j);
+					list->remove();          // Eliminamos el actual
+					list->insert(prev);      // Insertamos el anterior
+				}
+				else {
+					break;
+				}
+
+				j -= gap;
+			}
+			list->goToPos(j);
+			list->remove();              // Eliminamos lo que quedó
+			list->insert(temp);         // Insertamos el original
+		}
+	}
 }
 
 int main() {
