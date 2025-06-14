@@ -1,18 +1,18 @@
 /*
  * Nombre del proyecto: TrieLec-Inador
  * 
- * Descripción General: 
+ * Descripciï¿½n General: 
  * 
- * El actual proyecto consiste en la implementación de un árbol trie con palabras obtenidas de un archivo de texto
- * en formato ANSI con el fin de consultar y obtener información relevante sobre el archivo analizado
+ * El actual proyecto consiste en la implementaciï¿½n de un ï¿½rbol trie con palabras obtenidas de un archivo de texto
+ * en formato ANSI con el fin de consultar y obtener informaciï¿½n relevante sobre el archivo analizado
  * 
  * Equipo de Trabajo:
  * - Josue Santiago Hidalgo Sandoval
  * - Marvin
- * - Sebastián
+ * - Sebastiï¿½n
  */
 
- // Importar las librerías necesarias
+ // Importar las librerï¿½as necesarias
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -63,10 +63,10 @@ static int inputInt(const string& message) {
 			return stoi(input); // Convierte a entero, lanza excepciones si falla
 		}
 		catch (const std::invalid_argument&) {
-			cout << "Error: Entrada no válida. Por favor, ingrese un número entero." << endl;
+			cout << "Error: Entrada no vï¿½lida. Por favor, ingrese un nï¿½mero entero." << endl;
 		}
 		catch (const std::out_of_range&) {
-			cout << "Error: Número fuera de rango. Por favor, intente de nuevo." << endl;
+			cout << "Error: Nï¿½mero fuera de rango. Por favor, intente de nuevo." << endl;
 		}
 	}
 }
@@ -77,7 +77,7 @@ static string inputString(const string& message) {
 			cout << message;
 			getline(cin, input);
 			if (input.empty())
-				throw invalid_argument("La entrada no puede estar vacía.");
+				throw invalid_argument("La entrada no puede estar vacï¿½a.");
 			return input;
 		}
 		catch (const  invalid_argument& e) {
@@ -97,10 +97,10 @@ static void printWelcomeMessage() {
 	cout << "  |____|   |__|  |__|\\___  >_______ \\___  >\\___  >         |___|___|  (____  /__|  \\____/|__|   " << endl;
 	cout << "                         \\/        \\/   \\/     \\/                   \\/     \\/                   " << endl;
 
-	cout << "El actual proyecto consiste en la implementación de un árbol trie con palabras obtenidas de un archivo de texto" << endl;
-	cout << "en formato ANSI con el fin de consultar y obtener información relevante sobre el archivo analizado como : " << endl;
+	cout << "El actual proyecto consiste en la implementaciï¿½n de un ï¿½rbol trie con palabras obtenidas de un archivo de texto" << endl;
+	cout << "en formato ANSI con el fin de consultar y obtener informaciï¿½n relevante sobre el archivo analizado como : " << endl;
 	cout << "1. Lista de palabras coincidentes con respecto a una palabra o prefijo." << endl;
-	cout << "2. Para cada palabra coincidente se muestra una lista con las líneas de texto donde aparece la palabra." << endl;
+	cout << "2. Para cada palabra coincidente se muestra una lista con las lï¿½neas de texto donde aparece la palabra." << endl;
 	cout << "3. Buscar palabras por cantidad de letras." << endl;
 	cout << "4. Ordenar las palabras por frecuencia de uso." << endl;
 	cout << "Por favor, siga las instrucciones para cargar el archivo y realizar consultas." << endl;
@@ -147,75 +147,75 @@ static void processLinePerLine(ifstream& file, Trie*& book, Dictionary<char, cha
 
 // Initialize variables
 static void abecedaryDictionary(Dictionary<char, char>*& abc) {
-	// Letras mayúsculas y minúsculas estándar
+	// Letras mayï¿½sculas y minï¿½sculas estï¿½ndar
 	for (char c = 'A'; c <= 'Z'; ++c)
 		abc->insert(c, c);
 	for (char c = 'a'; c <= 'z'; ++c)
 		abc->insert(c, c);
 
 	// Letras acentuadas y especiales en ANSI (Windows-1252)
-	// Mayúsculas -> Minúsculas
-	abc->insert(char(193), char(225)); // Á -> á
-	abc->insert(char(201), char(233)); // É -> é
-	abc->insert(char(205), char(237)); // Í -> í
-	abc->insert(char(211), char(243)); // Ó -> ó
-	abc->insert(char(218), char(250)); // Ú -> ú
-	abc->insert(char(220), char(252)); // Ü -> ü
-	abc->insert(char(209), char(241)); // Ñ -> ñ
+	// Mayï¿½sculas -> Minï¿½sculas
+	abc->insert(char(193), char(225)); // ï¿½ -> ï¿½
+	abc->insert(char(201), char(233)); // ï¿½ -> ï¿½
+	abc->insert(char(205), char(237)); // ï¿½ -> ï¿½
+	abc->insert(char(211), char(243)); // ï¿½ -> ï¿½
+	abc->insert(char(218), char(250)); // ï¿½ -> ï¿½
+	abc->insert(char(220), char(252)); // ï¿½ -> ï¿½
+	abc->insert(char(209), char(241)); // ï¿½ -> ï¿½
 
-	// Minúsculas acentuadas y especiales (se mapean a sí mismas)
-	abc->insert(char(225), char(225)); // á
-	abc->insert(char(233), char(233)); // é
-	abc->insert(char(237), char(237)); // í
-	abc->insert(char(243), char(243)); // ó
-	abc->insert(char(250), char(250)); // ú
-	abc->insert(char(252), char(252)); // ü
-	abc->insert(char(241), char(241)); // ñ
+	// Minï¿½sculas acentuadas y especiales (se mapean a sï¿½ mismas)
+	abc->insert(char(225), char(225)); // ï¿½
+	abc->insert(char(233), char(233)); // ï¿½
+	abc->insert(char(237), char(237)); // ï¿½
+	abc->insert(char(243), char(243)); // ï¿½
+	abc->insert(char(250), char(250)); // ï¿½
+	abc->insert(char(252), char(252)); // ï¿½
+	abc->insert(char(241), char(241)); // ï¿½
 }
 
 static void lowercaseDictionary(Dictionary<char, char>*& abc) {
-	// Letras estándar
+	// Letras estï¿½ndar
 	for (char c = 'A'; c <= 'Z'; ++c)
 		abc->insert(c, c + 32);
 
-	// Mayúsculas acentuadas y especiales -> minúsculas
-	abc->insert(char(193), char(225)); // Á -> á
-	abc->insert(char(201), char(233)); // É -> é
-	abc->insert(char(205), char(237)); // Í -> í
-	abc->insert(char(211), char(243)); // Ó -> ó
-	abc->insert(char(218), char(250)); // Ú -> ú
-	abc->insert(char(220), char(252)); // Ü -> ü
-	abc->insert(char(209), char(241)); // Ñ -> ñ
+	// Mayï¿½sculas acentuadas y especiales -> minï¿½sculas
+	abc->insert(char(193), char(225)); // ï¿½ -> ï¿½
+	abc->insert(char(201), char(233)); // ï¿½ -> ï¿½
+	abc->insert(char(205), char(237)); // ï¿½ -> ï¿½
+	abc->insert(char(211), char(243)); // ï¿½ -> ï¿½
+	abc->insert(char(218), char(250)); // ï¿½ -> ï¿½
+	abc->insert(char(220), char(252)); // ï¿½ -> ï¿½
+	abc->insert(char(209), char(241)); // ï¿½ -> ï¿½
 
-	// Minúsculas acentuadas y especiales (se mapean a sí mismas)
-	abc->insert(char(225), char(225)); // á
-	abc->insert(char(233), char(233)); // é
-	abc->insert(char(237), char(237)); // í
-	abc->insert(char(243), char(243)); // ó
-	abc->insert(char(250), char(250)); // ú
-	abc->insert(char(252), char(252)); // ü
-	abc->insert(char(241), char(241)); // ñ
+	// Minï¿½sculas acentuadas y especiales (se mapean a sï¿½ mismas)
+	abc->insert(char(225), char(225)); // ï¿½
+	abc->insert(char(233), char(233)); // ï¿½
+	abc->insert(char(237), char(237)); // ï¿½
+	abc->insert(char(243), char(243)); // ï¿½
+	abc->insert(char(250), char(250)); // ï¿½
+	abc->insert(char(252), char(252)); // ï¿½
+	abc->insert(char(241), char(241)); // ï¿½
 }
 
 
 int main() {
 
 	UINT cp = GetConsoleOutputCP();
-	cout << "La consola está usando la code page: " << cp << std::endl;
+	cout << "La consola estï¿½ usando la code page: " << cp << std::endl;
 
 	setlocale(LC_ALL, "spanish");
 	SetConsoleCP(1252);
 	SetConsoleOutputCP(1252);
 	
 
-	// 1. Al iniciar el programa se imprime un mensaje de bienvenida muy corto que explica el propósito del programa.
+	// 1. Al iniciar el programa se imprime un mensaje de bienvenida muy corto que explica el propï¿½sito del programa.
 	printWelcomeMessage();
 	waitAndJump();
 
-	// 2.	Se solicita al usuario el nombre de un archivo de texto a analizar. No debe agregarse ningún carácter o
-	//		extensión al nombre de usuario proporcionado por el usuario.El usuario debe escribir la extensión del
+	// 2.	Se solicita al usuario el nombre de un archivo de texto a analizar. No debe agregarse ningï¿½n carï¿½cter o
+	//		extensiï¿½n al nombre de usuario proporcionado por el usuario.El usuario debe escribir la extensiï¿½n del
 	//		archivo.
-	string fileName = inputString("Ingrese el nombre del archivo (con extensión): \n");
+	string fileName = inputString("Ingrese el nombre del archivo (con extensiï¿½n): \n");
 
 	// 3. Si el archivo no existe o no es posible abrirlo, se indica un mensaje de error y el programa termina.
 	ifstream file; // Creamos objeto archivo de tipo ifstream
@@ -236,8 +236,8 @@ int main() {
 		openFile(file, fileName);
 		openFile(ignoreFile, "Libros/ignorar.txt");
 
-		// 4. Si no, se abre el archivo y es procesado línea por línea. La línea original leída debe almacenarse en una
-		// estructura de rápido acceso que permita localizar el texto de la línea en caso de que se requiera
+		// 4. Si no, se abre el archivo y es procesado lï¿½nea por lï¿½nea. La lï¿½nea original leï¿½da debe almacenarse en una
+		// estructura de rï¿½pido acceso que permita localizar el texto de la lï¿½nea en caso de que se requiera
 		// imprimirla.
 		processLinePerLine(file,		book,			abcLetters, lowerCaseLetters);
 		processLinePerLine(ignoreFile,	bookToIgnore,	abcLetters, lowerCaseLetters);
