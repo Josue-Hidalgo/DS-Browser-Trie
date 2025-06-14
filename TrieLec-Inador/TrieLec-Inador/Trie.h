@@ -77,8 +77,8 @@ private:
 		delete children;
 	}
 
-	void getMatchesLetterNumberAux(TrieNode* current, int letterNumber, string prefix, List<KVPair<string, int>>* matches) {
-		if (current->prefixCount == letterNumber) { // Caso Base: el conteo de prefijo es el mismo que el conteo de letras pedido
+	void getMatchesLetterNumberAux(TrieNode* current, const int letterNumber, string prefix, List<KVPair<string, int>>* matches) {
+		if (current->isFinal && current->letterCount == letterNumber) { // Caso Base: el conteo de prefijo es el mismo que el conteo de letras pedido
 			KVPair<string, int> pair(prefix, current->lines->getSize()); // Pair (Prefijo, Cantidad en Texto)
 			matches->append(pair);
 		}
@@ -104,10 +104,10 @@ public:
 
 	void insert(string word, int lineNumber) {
 
-		cout << "Insertando: [" << word << "] en línea " << lineNumber << std::endl;
+		//cout << "Insertando: [" << word << "] en línea " << lineNumber << std::endl;
 
 		TrieNode* current;
-		
+		int depth = 0;
 		if (containsWord(word)) {
 			current = findNode(word);
 			current->lines->append(lineNumber);
@@ -116,10 +116,12 @@ public:
 
 		current = root;
 		for (char c : word) {
+			depth++;
 			current->prefixCount++;
 			if (!current->containsChild(c))
 				current->addChild(c);
 			current = current->getChild(c);
+			current->letterCount = depth;
 			current->lines->append(lineNumber);
 		}
 		current->prefixCount++;
