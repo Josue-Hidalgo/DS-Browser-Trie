@@ -21,12 +21,14 @@ class TrieNode {
 public:
 	bool isFinal;
 	int prefixCount;
+	int letterCount;
 	Dictionary<char, TrieNode*>* children;
 	List<int>* lines;
 
 	TrieNode() {
 		isFinal = false;
 		prefixCount = 0;
+		letterCount = 0;
 		children = new SplayTreeDictionary<char, TrieNode*>();
 		lines = new DLinkedList<int>();
 	}

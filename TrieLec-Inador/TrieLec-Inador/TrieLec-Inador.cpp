@@ -115,29 +115,33 @@ static void openFile(ifstream& file, string name) {
 static void closeFile(ifstream& file) {
 	file.close(); // Cerramos el archivo
 }
-static void processLinePerLine(ifstream& file, Trie*& book, Dictionary<char, char>* validDict, Dictionary<char, char>* toLowerDict) {
+static void processLinePerLine(ifstream& file, Trie*& book, Dictionary<char, char>* validDict, Dictionary<char, char>* toLowerDict, Dictionary<int, string>*& linesList) {
 	string line;
 	string word;
 	int lineNumber = 0;
 
 	while (getline(file, line)) {
-		bool inWord = false;
+		if (!line.empty() && linesList != nullptr) {
+			linesList->insert(lineNumber, line);
+			//cout << "Insertando: " << line << " en la línea: " << lineNumber << endl;
+		}
+		bool inword = false;
 		for (char c : line) {
 			if (validDict->contains(c) || toLowerDict->contains(c)) {
-				inWord = true;
+				inword = true;
 				if (toLowerDict->contains(c))
 					c = toLowerDict->getValue(c);
 				word += c;
 			}
 			else {
-				if (inWord && !word.empty()) {
+				if (inword && !word.empty()) {
 					book->insert(word, lineNumber);
 					word.clear();
-					inWord = false;
+					inword = false;
 				}
 			}
 		}
-		if (inWord && !word.empty()) {
+		if (inword && !word.empty()) {
 			book->insert(word, lineNumber);
 			word.clear();
 		}
@@ -172,7 +176,6 @@ static void abecedaryDictionary(Dictionary<char, char>*& abc) {
 	abc->insert(char(252), char(252)); // ü
 	abc->insert(char(241), char(241)); // ñ
 }
-
 static void lowercaseDictionary(Dictionary<char, char>*& abc) {
 	// Letras estándar
 	for (char c = 'A'; c <= 'Z'; ++c)
@@ -197,16 +200,18 @@ static void lowercaseDictionary(Dictionary<char, char>*& abc) {
 	abc->insert(char(241), char(241)); // ñ
 }
 
+// Sort Algorithms
+static void sort(List<KVPair<string, int>>*& list) {
+
+}
 
 int main() {
-
-	UINT cp = GetConsoleOutputCP();
-	cout << "La consola está usando la code page: " << cp << std::endl;
-
 	setlocale(LC_ALL, "spanish");
 	SetConsoleCP(1252);
 	SetConsoleOutputCP(1252);
-	
+
+	//UINT cp = GetConsoleOutputCP();
+	//cout << "La consola está usando la code page: " << cp << std::endl;
 
 	// 1. Al iniciar el programa se imprime un mensaje de bienvenida muy corto que explica el propósito del programa.
 	printWelcomeMessage();
@@ -231,6 +236,9 @@ int main() {
 
 	Dictionary<char, char>* lowerCaseLetters = new HashTable<char, char>();
 	lowercaseDictionary(lowerCaseLetters);
+
+	Dictionary<int, string>* lines = new HashTable<int, string>();
+	Dictionary<int, string>* notSave = nullptr;
 	
 	try {
 		openFile(file, fileName);
@@ -239,22 +247,109 @@ int main() {
 		// 4. Si no, se abre el archivo y es procesado línea por línea. La línea original leída debe almacenarse en una
 		// estructura de rápido acceso que permita localizar el texto de la línea en caso de que se requiera
 		// imprimirla.
-		processLinePerLine(file,		book,			abcLetters, lowerCaseLetters);
-		processLinePerLine(ignoreFile,	bookToIgnore,	abcLetters, lowerCaseLetters);
+		processLinePerLine(file,		book,			abcLetters, lowerCaseLetters, lines);
+		processLinePerLine(ignoreFile,	bookToIgnore,	abcLetters, lowerCaseLetters, notSave);
+		
+		int option = -1;
+		while (option != 0) {
 
-		//book->print();
+			option = inputInt("Seleccione una opción:\n"
+				"1. Consultar por prefijo.\n"
+				"2. Consultar por palabra.\n"
+				"3. Consultar por cantidad de letras.\n"
+				"4. Ordenar palabras por frecuencia de uso.\n"
+				"5. Cargar Archivo.\n"
+				"0. Salir del Programa.\n"
+				"Ingrese su opción: ");
+			printNewPage();
 
-		closeFile(file);
-		closeFile(ignoreFile);
+			switch (option) {
+			case 0:{
+				cout << "Muchas gracias por usar nuestros servicios." << endl;
+				break;
+			}
+			case 1:{
+				string prefix = inputString("Ingrese un prefijo a buscar: ");
+
+				List<KVPair<string, int>>* listMatches = book->getPrefixMatches(prefix);
+
+				sort(listMatches);
+
+				cout << "Resultados de la Búsqueda: " << endl;
+				for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
+					KVPair<string, int> pair = listMatches->getElement();
+					cout << pair.key << ", " << pair.value << endl;
+				}
+
+				delete listMatches;
+				break;
+			}
+			case 2:{
+
+				string word = inputString("Ingrese una palabra a buscar: ");
+				if (!book->containsWord(word))
+					cout << "La palabra '" << word << "' no fue encontrada." << endl;
+				else {
+					List<int>* linesList = book->getListLines(word);
+
+					cout << "Resultados de la Búsqueda: " << endl;
+					cout << "La palabra '" << word << "' sale " << linesList->getSize() << " veces y fue encontrada en las siguientes líneas: " << endl;
+					
+					for (linesList->goToStart(); !linesList->atEnd(); linesList->next())
+						cout << linesList->getElement() << ", ";
+					cout << endl;
+					
+					delete linesList;
+				}
+				break;
+			}
+			case 3: {
+				int letterNumber = inputInt("Ingrese la cantidad de letras a buscar: ");
+				List<KVPair<string, int>>* listMatches = book->getMatchesLetterNumber(letterNumber);
+				
+				sort(listMatches);
+				
+				cout << "Resultados de la Búsqueda: " << endl;
+				for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
+					KVPair<string, int> pair = listMatches->getElement();
+					cout << pair.key << ", " << pair.value << endl;
+				}
+				delete listMatches;
+				break;
+			}
+			case 4: {
+				break;
+			}
+			case 5:{
+				closeFile(file);
+				openFile(file, fileName);
+				openFile(ignoreFile, "Libros/ignorar.txt");
+
+				processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
+
+				closeFile(file);
+
+				break;
+			}
+			default:
+				cout << "Opción no válida. Por favor, ingrese un número entre 1 y 5." << endl;
+				break;
+			}
+			waitAndJump();
+		}
 	} catch (const runtime_error& e){
 		cout << "ERROR: Runtime Error." << endl;
 		cout << "Detail: " << e.what() << endl;
 	}
-	
+
+	closeFile(file);
+	closeFile(ignoreFile);
 	delete book;
+	delete lines;
+	delete notSave;
 	delete abcLetters;
 	delete bookToIgnore;
 	delete lowerCaseLetters;
-	
+
 	return 0;
 }
