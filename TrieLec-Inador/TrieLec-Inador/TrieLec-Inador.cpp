@@ -1,18 +1,18 @@
 /*
  * Nombre del proyecto: TrieLec-Inador
- * 
- * Descripciï¿½n General: 
- * 
- * El actual proyecto consiste en la implementaciï¿½n de un ï¿½rbol trie con palabras obtenidas de un archivo de texto
- * en formato ANSI con el fin de consultar y obtener informaciï¿½n relevante sobre el archivo analizado
- * 
+ *
+ * Descripción General:
+ *
+ * El actual proyecto consiste en la implementación de un árbol trie con palabras obtenidas de un archivo de texto
+ * en formato ANSI con el fin de consultar y obtener información relevante sobre el archivo analizado
+ *
  * Equipo de Trabajo:
  * - Josue Santiago Hidalgo Sandoval
  * - Marvin
- * - Sebastiï¿½n
+ * - Sebastián
  */
 
- // Importar las librerï¿½as necesarias
+ // Importar las librerías necesarias
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -63,10 +63,10 @@ static int inputInt(const string& message) {
 			return stoi(input); // Convierte a entero, lanza excepciones si falla
 		}
 		catch (const std::invalid_argument&) {
-			cout << "Error: Entrada no vï¿½lida. Por favor, ingrese un nï¿½mero entero." << endl;
+			cout << "Error: Entrada no válida. Por favor, ingrese un número entero." << endl;
 		}
 		catch (const std::out_of_range&) {
-			cout << "Error: Nï¿½mero fuera de rango. Por favor, intente de nuevo." << endl;
+			cout << "Error: Número fuera de rango. Por favor, intente de nuevo." << endl;
 		}
 	}
 }
@@ -77,7 +77,7 @@ static string inputString(const string& message) {
 			cout << message;
 			getline(cin, input);
 			if (input.empty())
-				throw invalid_argument("La entrada no puede estar vacï¿½a.");
+				throw invalid_argument("La entrada no puede estar vacía.");
 			return input;
 		}
 		catch (const  invalid_argument& e) {
@@ -89,7 +89,7 @@ static string inputString(const string& message) {
 /*PRINTS*/
 static void printWelcomeMessage() {
 	cout << "Bienvenido al programa TrieLec-Inador" << endl;
-	
+
 	cout << "___________      .__       .____                           .___               __                " << endl;
 	cout << "\\__    ___/______|__| ____ |    |    ____   ____           |   | ____ _____ _/  |_  ___________ " << endl;
 	cout << "  |    |  \\_  __ \\  |/ __ \\|    |  _/ __ \\_/ ___\\   ______ |   |/    \\ \\__ \\\\   __\\/  _ \\_  __ \\" << endl;
@@ -97,10 +97,10 @@ static void printWelcomeMessage() {
 	cout << "  |____|   |__|  |__|\\___  >_______ \\___  >\\___  >         |___|___|  (____  /__|  \\____/|__|   " << endl;
 	cout << "                         \\/        \\/   \\/     \\/                   \\/     \\/                   " << endl;
 
-	cout << "El actual proyecto consiste en la implementaciï¿½n de un ï¿½rbol trie con palabras obtenidas de un archivo de texto" << endl;
-	cout << "en formato ANSI con el fin de consultar y obtener informaciï¿½n relevante sobre el archivo analizado como : " << endl;
+	cout << "El actual proyecto consiste en la implementación de un árbol trie con palabras obtenidas de un archivo de texto" << endl;
+	cout << "en formato ANSI con el fin de consultar y obtener información relevante sobre el archivo analizado como : " << endl;
 	cout << "1. Lista de palabras coincidentes con respecto a una palabra o prefijo." << endl;
-	cout << "2. Para cada palabra coincidente se muestra una lista con las lï¿½neas de texto donde aparece la palabra." << endl;
+	cout << "2. Para cada palabra coincidente se muestra una lista con las líneas de texto donde aparece la palabra." << endl;
 	cout << "3. Buscar palabras por cantidad de letras." << endl;
 	cout << "4. Ordenar las palabras por frecuencia de uso." << endl;
 	cout << "Por favor, siga las instrucciones para cargar el archivo y realizar consultas." << endl;
@@ -110,7 +110,7 @@ static void printWelcomeMessage() {
 static void openFile(ifstream& file, string name) {
 	file.open(name); // Abrimos el archivo que pedimos al usuario
 	if (!file.is_open())
-		throw runtime_error("File was imposible to open.");
+		throw runtime_error("No fue posible abrir el archivo.");
 }
 static void closeFile(ifstream& file) {
 	file.close(); // Cerramos el archivo
@@ -123,7 +123,6 @@ static void processLinePerLine(ifstream& file, Trie*& book, Dictionary<char, cha
 	while (getline(file, line)) {
 		if (!line.empty() && linesList != nullptr) {
 			linesList->insert(lineNumber, line);
-			//cout << "Insertando: " << line << " en la lï¿½nea: " << lineNumber << endl;
 		}
 		bool inword = false;
 		for (char c : line) {
@@ -151,58 +150,52 @@ static void processLinePerLine(ifstream& file, Trie*& book, Dictionary<char, cha
 
 // Initialize variables
 static void abecedaryDictionary(Dictionary<char, char>*& abc) {
-	// Letras mayï¿½sculas y minï¿½sculas estï¿½ndar
 	for (char c = 'A'; c <= 'Z'; ++c)
 		abc->insert(c, c);
 	for (char c = 'a'; c <= 'z'; ++c)
 		abc->insert(c, c);
 
 	// Letras acentuadas y especiales en ANSI (Windows-1252)
-	// Mayï¿½sculas -> Minï¿½sculas
-	abc->insert(char(193), char(225)); // ï¿½ -> ï¿½
-	abc->insert(char(201), char(233)); // ï¿½ -> ï¿½
-	abc->insert(char(205), char(237)); // ï¿½ -> ï¿½
-	abc->insert(char(211), char(243)); // ï¿½ -> ï¿½
-	abc->insert(char(218), char(250)); // ï¿½ -> ï¿½
-	abc->insert(char(220), char(252)); // ï¿½ -> ï¿½
-	abc->insert(char(209), char(241)); // ï¿½ -> ï¿½
+	abc->insert(char(193), char(225)); // Á -> á
+	abc->insert(char(201), char(233)); // É -> é
+	abc->insert(char(205), char(237)); // Í -> í
+	abc->insert(char(211), char(243)); // Ó -> ó
+	abc->insert(char(218), char(250)); // Ú -> ú
+	abc->insert(char(220), char(252)); // Ü -> ü
+	abc->insert(char(209), char(241)); // Ñ -> ñ
 
-	// Minï¿½sculas acentuadas y especiales (se mapean a sï¿½ mismas)
-	abc->insert(char(225), char(225)); // ï¿½
-	abc->insert(char(233), char(233)); // ï¿½
-	abc->insert(char(237), char(237)); // ï¿½
-	abc->insert(char(243), char(243)); // ï¿½
-	abc->insert(char(250), char(250)); // ï¿½
-	abc->insert(char(252), char(252)); // ï¿½
-	abc->insert(char(241), char(241)); // ï¿½
+	abc->insert(char(225), char(225)); // á
+	abc->insert(char(233), char(233)); // é
+	abc->insert(char(237), char(237)); // í
+	abc->insert(char(243), char(243)); // ó
+	abc->insert(char(250), char(250)); // ú
+	abc->insert(char(252), char(252)); // ü
+	abc->insert(char(241), char(241)); // ñ
 }
 static void lowercaseDictionary(Dictionary<char, char>*& abc) {
-	// Letras estï¿½ndar
 	for (char c = 'A'; c <= 'Z'; ++c)
 		abc->insert(c, c + 32);
 
-	// Mayï¿½sculas acentuadas y especiales -> minï¿½sculas
-	abc->insert(char(193), char(225)); // ï¿½ -> ï¿½
-	abc->insert(char(201), char(233)); // ï¿½ -> ï¿½
-	abc->insert(char(205), char(237)); // ï¿½ -> ï¿½
-	abc->insert(char(211), char(243)); // ï¿½ -> ï¿½
-	abc->insert(char(218), char(250)); // ï¿½ -> ï¿½
-	abc->insert(char(220), char(252)); // ï¿½ -> ï¿½
-	abc->insert(char(209), char(241)); // ï¿½ -> ï¿½
+	abc->insert(char(193), char(225)); // Á -> á
+	abc->insert(char(201), char(233)); // É -> é
+	abc->insert(char(205), char(237)); // Í -> í
+	abc->insert(char(211), char(243)); // Ó -> ó
+	abc->insert(char(218), char(250)); // Ú -> ú
+	abc->insert(char(220), char(252)); // Ü -> ü
+	abc->insert(char(209), char(241)); // Ñ -> ñ
 
-	// Minï¿½sculas acentuadas y especiales (se mapean a sï¿½ mismas)
-	abc->insert(char(225), char(225)); // ï¿½
-	abc->insert(char(233), char(233)); // ï¿½
-	abc->insert(char(237), char(237)); // ï¿½
-	abc->insert(char(243), char(243)); // ï¿½
-	abc->insert(char(250), char(250)); // ï¿½
-	abc->insert(char(252), char(252)); // ï¿½
-	abc->insert(char(241), char(241)); // ï¿½
+	abc->insert(char(225), char(225)); // á
+	abc->insert(char(233), char(233)); // é
+	abc->insert(char(237), char(237)); // í
+	abc->insert(char(243), char(243)); // ó
+	abc->insert(char(250), char(250)); // ú
+	abc->insert(char(252), char(252)); // ü
+	abc->insert(char(241), char(241)); // ñ
 }
 
 // Sort Algorithms
 static void sort(List<KVPair<string, int>>*& list) {
-
+	// Aquí podrías implementar un algoritmo como MergeSort o QuickSort personalizado si lo necesitas
 }
 
 int main() {
@@ -210,27 +203,21 @@ int main() {
 	SetConsoleCP(1252);
 	SetConsoleOutputCP(1252);
 
-	//UINT cp = GetConsoleOutputCP();
-	//cout << "La consola estï¿½ usando la code page: " << cp << std::endl;
+	UINT cp = GetConsoleOutputCP();
+	cout << "La consola está usando la code page: " << cp << std::endl;
 
-	// 1. Al iniciar el programa se imprime un mensaje de bienvenida muy corto que explica el propï¿½sito del programa.
 	printWelcomeMessage();
 	waitAndJump();
 
-	// 2.	Se solicita al usuario el nombre de un archivo de texto a analizar. No debe agregarse ningï¿½n carï¿½cter o
-	//		extensiï¿½n al nombre de usuario proporcionado por el usuario.El usuario debe escribir la extensiï¿½n del
-	//		archivo.
-	string fileName = inputString("Ingrese el nombre del archivo (con extensiï¿½n): \n");
+	string fileName = inputString("Ingrese el nombre del archivo (con extensión): \n");
 
-	// 3. Si el archivo no existe o no es posible abrirlo, se indica un mensaje de error y el programa termina.
-	ifstream file; // Creamos objeto archivo de tipo ifstream
-	ifstream ignoreFile; // Creamos objeto archivo de tipo ifstream para el ignore.txt
-
-	ofstream outputFile; // Objeto archivo que usaremos en caso de que se requiera un output por archivo.
+	ifstream file;
+	ifstream ignoreFile;
+	ofstream outputFile;
 
 	Trie* book = new Trie();
 	Trie* bookToIgnore = new Trie();
-	
+
 	Dictionary<char, char>* abcLetters = new HashTable<char, char>();
 	abecedaryDictionary(abcLetters);
 
@@ -239,66 +226,54 @@ int main() {
 
 	Dictionary<int, string>* lines = new HashTable<int, string>();
 	Dictionary<int, string>* notSave = nullptr;
-	
+
 	try {
 		openFile(file, fileName);
 		openFile(ignoreFile, "Libros/ignorar.txt");
 
-		// 4. Si no, se abre el archivo y es procesado lï¿½nea por lï¿½nea. La lï¿½nea original leï¿½da debe almacenarse en una
-		// estructura de rï¿½pido acceso que permita localizar el texto de la lï¿½nea en caso de que se requiera
-		// imprimirla.
-		processLinePerLine(file,		book,			abcLetters, lowerCaseLetters, lines);
-		processLinePerLine(ignoreFile,	bookToIgnore,	abcLetters, lowerCaseLetters, notSave);
-		
+		processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
+		processLinePerLine(ignoreFile, bookToIgnore, abcLetters, lowerCaseLetters, notSave);
+
 		int option = -1;
 		while (option != 0) {
 
-			option = inputInt("Seleccione una opciï¿½n:\n"
+			option = inputInt("Seleccione una opción:\n"
 				"1. Consultar por prefijo.\n"
 				"2. Consultar por palabra.\n"
 				"3. Consultar por cantidad de letras.\n"
-				"4. Ordenar palabras por frecuencia de uso.\n"
+				"4. Obtener Top Palabras Más Frecuentes.\n"
 				"5. Cargar Archivo.\n"
 				"0. Salir del Programa.\n"
-				"Ingrese su opciï¿½n: ");
+				"Ingrese su opción: ");
 			printNewPage();
 
 			switch (option) {
-			case 0:{
+			case 0:
 				cout << "Muchas gracias por usar nuestros servicios." << endl;
 				break;
-			}
-			case 1:{
+			case 1: {
 				string prefix = inputString("Ingrese un prefijo a buscar: ");
-
 				List<KVPair<string, int>>* listMatches = book->getPrefixMatches(prefix);
-
 				sort(listMatches);
-
-				cout << "Resultados de la Bï¿½squeda: " << endl;
+				cout << "Resultados de la Búsqueda: " << endl;
 				for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
 					KVPair<string, int> pair = listMatches->getElement();
 					cout << pair.key << ", " << pair.value << endl;
 				}
-
 				delete listMatches;
 				break;
 			}
-			case 2:{
-
+			case 2: {
 				string word = inputString("Ingrese una palabra a buscar: ");
 				if (!book->containsWord(word))
 					cout << "La palabra '" << word << "' no fue encontrada." << endl;
 				else {
 					List<int>* linesList = book->getListLines(word);
-
-					cout << "Resultados de la Bï¿½squeda: " << endl;
-					cout << "La palabra '" << word << "' sale " << linesList->getSize() << " veces y fue encontrada en las siguientes lï¿½neas: " << endl;
-					
+					cout << "Resultados de la Búsqueda: " << endl;
+					cout << "La palabra '" << word << "' aparece " << linesList->getSize() << " veces y fue encontrada en las siguientes líneas: " << endl;
 					for (linesList->goToStart(); !linesList->atEnd(); linesList->next())
 						cout << linesList->getElement() << ", ";
 					cout << endl;
-					
 					delete linesList;
 				}
 				break;
@@ -306,10 +281,8 @@ int main() {
 			case 3: {
 				int letterNumber = inputInt("Ingrese la cantidad de letras a buscar: ");
 				List<KVPair<string, int>>* listMatches = book->getMatchesLetterNumber(letterNumber);
-				
 				sort(listMatches);
-				
-				cout << "Resultados de la Bï¿½squeda: " << endl;
+				cout << "Resultados de la Búsqueda: " << endl;
 				for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
 					KVPair<string, int> pair = listMatches->getElement();
 					cout << pair.key << ", " << pair.value << endl;
@@ -317,29 +290,26 @@ int main() {
 				delete listMatches;
 				break;
 			}
-			case 4: {
+			case 4:
+				// Lógica del Top N de palabras más frecuentes
 				break;
-			}
-			case 5:{
+			case 5:
 				closeFile(file);
 				openFile(file, fileName);
 				openFile(ignoreFile, "Libros/ignorar.txt");
-
 				processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
-
 				closeFile(file);
-
 				break;
-			}
 			default:
-				cout << "Opciï¿½n no vï¿½lida. Por favor, ingrese un nï¿½mero entre 1 y 5." << endl;
+				cout << "Opción no válida. Por favor, ingrese un número entre 1 y 5." << endl;
 				break;
 			}
 			waitAndJump();
 		}
-	} catch (const runtime_error& e){
+	}
+	catch (const runtime_error& e) {
 		cout << "ERROR: Runtime Error." << endl;
-		cout << "Detail: " << e.what() << endl;
+		cout << "Detalle: " << e.what() << endl;
 	}
 
 	closeFile(file);
