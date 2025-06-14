@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Nombre del proyecto: TrieLec-Inador
  * 
  * Descripción General: 
@@ -126,11 +126,7 @@ static void processLinePerLineIgnore(ifstream& file) {
 }
 
 int main() {
-	/*
-	setlocale(LC_ALL, "spanish");
-	SetConsoleCP(1252);
-	SetConsoleOutputCP(1252);
-	*/
+	setlocale(LC_ALL, "Spanish, UTF-8");
 
 	// 1. Al iniciar el programa se imprime un mensaje de bienvenida muy corto que explica el propósito del programa.
 	printWelcomeMessage();
