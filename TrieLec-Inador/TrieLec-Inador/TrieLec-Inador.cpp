@@ -22,6 +22,7 @@
 
 #include "Trie.h"
 #include "HashTable.h"
+#include "MaxHeap.h"
 
 // Clases 
 
@@ -341,9 +342,31 @@ int main() {
 				delete listMatches;
 				break;
 			}
-			case 4:
-				// Lógica del Top N de palabras más frecuentes
+			case 4: {
+				int n = inputInt("¿Cuántas palabras quiere ver en el Top?: ");
+				List<KVPair<string, int>>* allWords = book->getAllWordsWithFrequency();
+
+				// Heap con KVPair invertido: frecuencia como key, palabra como value
+				MaxHeap<KVPair<int, string>> heap(allWords->getSize());
+
+				for (allWords->goToStart(); !allWords->atEnd(); allWords->next()) {
+					KVPair<string, int> pair = allWords->getElement();
+
+					if (!bookToIgnore->containsWord(pair.key)) {
+						KVPair<int, string> heapPair(pair.value, pair.key); // key=frecuencia, value=palabra
+						heap.insert(heapPair);
+					}
+				}
+
+				cout << "\nTop " << n << " palabras más utilizadas:\n";
+				for (int i = 0; i < n && !heap.isEmpty(); ++i) {
+					KVPair<int, string> entry = heap.removeFirst();
+					cout << i + 1 << ". " << entry.value << " (" << entry.key << " veces)" << endl;
+				}
+
+				delete allWords;
 				break;
+			}
 			case 5:
 				closeFile(file);
 				openFile(file, fileName);

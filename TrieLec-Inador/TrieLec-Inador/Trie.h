@@ -8,7 +8,7 @@
  * y que además permite realizar operaciones como
  * busqueda por prefijo y palabra.
  * 
- * Autor: Mauricio Avilés // Josué Hidalgo 
+ * Autor: Mauricio Avilés // Josué Hidalgo y Sebastián Masís
  * 
  */
 
@@ -224,5 +224,29 @@ public:
 		getMatchesLetterNumberAux(root, letterNumber, "", matches);
 		return matches;
 	}
+
+	void getAllWordsWithFrequencyAux(TrieNode* current, string prefix, List<KVPair<string, int>>* result) {
+		if (current->isFinal) {
+			int count = current->lines->getSize();
+			KVPair<string, int> pair(prefix, count);
+			result->append(pair);
+		}
+
+		List<char>* children = current->getChildren();
+		for (children->goToStart(); !children->atEnd(); children->next()) {
+			char c = children->getElement();
+			TrieNode* child = current->getChild(c);
+			getAllWordsWithFrequencyAux(child, prefix + c, result);
+		}
+		delete children;
+	}
+
+	List<KVPair<string, int>>* getAllWordsWithFrequency() {
+		List<KVPair<string, int>>* result = new DLinkedList<KVPair<string, int>>();
+		getAllWordsWithFrequencyAux(root, "", result);
+		return result;
+	}
+
+
 };
 
