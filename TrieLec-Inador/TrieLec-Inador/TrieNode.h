@@ -14,6 +14,7 @@
 #pragma once
 
 #include "SplayTreeDictionary.h"
+#include "HashTable.h"
 #include "List.h"
 #include "DLinkedList.h"
 
@@ -29,7 +30,7 @@ public:
 		isFinal = false;
 		prefixCount = 0;
 		letterCount = 0;
-		children = new SplayTreeDictionary<char, TrieNode*>();
+		children = new HashTable<char, TrieNode*>();
 		lines = new DLinkedList<int>();
 	}
 	~TrieNode() {

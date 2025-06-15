@@ -21,9 +21,11 @@
 #include <Windows.h>
 #include <iomanip>
 #include <sstream>
+#include <chrono>
 
 #include "Trie.h"
 #include "HashTable.h"
+#include "SplayTreeDictionary.h"
 #include "MaxHeap.h"
 
 // Clases 
@@ -295,16 +297,14 @@ static void sort(List<KVPair<string, int>>*& list) {
 // Auxiliary Functions
 static PrintMode seleccionarModoImpresion() {
 	int mode = 0;
-	while (mode != 1 && mode != 2) {
+	while (mode != 1 && mode != 2)
 		mode = inputInt("¿Cómo desea imprimir el resultado?\n1. Consola\n2. Archivo\nOpción: ");
-	}
 	return (mode == 2) ? PrintMode::Archivo : PrintMode::Consola;
 }
 static bool deseaImpresionCompleta() {
 	int fullMode = 0;
-	while (fullMode != 1 && fullMode != 2) {
+	while (fullMode != 1 && fullMode != 2)
 		fullMode = inputInt("¿Desea impresión completa de líneas?\n1. Sí (número y texto)\n2. No (solo números de línea)\nOpción: ");
-	}
 	return (fullMode == 1);
 }
 static void consultarPorPrefijo(Trie* book, Dictionary<char, char>* lowerCaseLetters, PrintMode printMode) {
@@ -323,7 +323,7 @@ static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLet
 	bool impresionCompleta = deseaImpresionCompleta();
 	string word = lowercase(lowerCaseLetters, inputString("Ingrese una palabra a buscar: "));
 	List<int>* linesList = book->getListLines(word);
-	if (linesList->getSize() == 0) {
+	if (linesList == nullptr || linesList->getSize() == 0) {
 		cout << "La palabra '" << word << "' no fue encontrada en el texto." << endl;
 		return;
 	}
@@ -384,14 +384,23 @@ static void cargarArchivo(Trie* book, Dictionary<int, string>* lines, ifstream& 
 	processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
 }
 
+// Test - DSs
+static std::chrono::high_resolution_clock::time_point obtenerTiempoActual() {
+	return std::chrono::high_resolution_clock::now();
+}
+static void imprimirDiferenciaTiempo(const std::chrono::high_resolution_clock::time_point& inicio,
+	const std::chrono::high_resolution_clock::time_point& fin) {
+	auto duracion = std::chrono::duration_cast<std::chrono::milliseconds>(fin - inicio).count();
+	std::cout << "Tiempo transcurrido: " << duracion << " ms" << std::endl;
+}
 
 int main() {
 	setlocale(LC_ALL, "spanish");
 	SetConsoleCP(1252);
 	SetConsoleOutputCP(1252);
 
-	UINT cp = GetConsoleOutputCP();
-	cout << "La consola está usando la code page: " << cp << std::endl;
+	// UINT cp = GetConsoleOutputCP();
+	// cout << "La consola está usando la code page: " << cp << std::endl;
 
 	printWelcomeMessage();
 	waitAndJump();
@@ -405,21 +414,25 @@ int main() {
 	Trie* book = new Trie();
 	Trie* bookToIgnore = new Trie();
 
-	Dictionary<char, char>* abcLetters = new SplayTreeDictionary<char, char>();
+	Dictionary<char, char>* abcLetters = new HashTable<char, char>();
 	abecedaryDictionary(abcLetters);
-
-	Dictionary<char, char>* lowerCaseLetters = new SplayTreeDictionary<char, char>();
+	Dictionary<char, char>* lowerCaseLetters = new HashTable<char, char>();
 	lowercaseDictionary(lowerCaseLetters);
 
 	Dictionary<int, string>* lines = new HashTable<int, string>();
 	Dictionary<int, string>* notSave = nullptr;
 
 	try {
+		std::chrono::high_resolution_clock::time_point inicio, fin;
 		openFile(file, fileName);
 		openFile(ignoreFile, "Libros/ignorar.txt");
-
+		inicio = obtenerTiempoActual();
 		processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
+
 		processLinePerLine(ignoreFile, bookToIgnore, abcLetters, lowerCaseLetters, notSave);
+		fin = obtenerTiempoActual();
+		imprimirDiferenciaTiempo(inicio, fin);
+
 
 		int option = -1;
 		while (option != 0) {
@@ -439,19 +452,34 @@ int main() {
 				cout << "Muchas gracias por usar nuestros servicios." << endl;
 				break;
 			case 1:
+				inicio = obtenerTiempoActual();
 				consultarPorPrefijo(book, lowerCaseLetters, seleccionarModoImpresion());
+				fin = obtenerTiempoActual();
+				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			case 2:
+				inicio = obtenerTiempoActual();
 				consultarPorPalabra(book, lowerCaseLetters, lines, seleccionarModoImpresion());
+				fin = obtenerTiempoActual();
+				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			case 3:
+				inicio = obtenerTiempoActual();
 				consultarPorCantidadLetras(book, seleccionarModoImpresion());
+				fin = obtenerTiempoActual();
+				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			case 4:
+				inicio = obtenerTiempoActual();
 				mostrarTopPalabras(book, bookToIgnore, seleccionarModoImpresion());
+				fin = obtenerTiempoActual();
+				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			case 5:
+				inicio = obtenerTiempoActual();
 				cargarArchivo(book, lines, file, fileName, abcLetters, lowerCaseLetters);
+				fin = obtenerTiempoActual();
+				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			default:
 				cout << "Opción no válida. Por favor, ingrese un número entre 1 y 5." << endl;
