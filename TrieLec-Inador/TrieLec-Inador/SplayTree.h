@@ -1,16 +1,16 @@
 /*
  * Nombre del Archivo: SplayTree.h
  * 
- * DescripciÛn General:
+ * Descripci√≥n General:
  * 
  * Esta es una clase que implementa la estructura de datos SplayTree, 
- * el cual funciona como un ·rbol binario que realiza la operaciÛn 
- * Splay (traer nodo a la raÌz) cada que se hace una insersiÛn, b˙squeda,
+ * el cual funciona como un √°rbol binario que realiza la operaci√≥n 
+ * Splay (traer nodo a la ra√≠z) cada que se hace una insersi√≥n, b√∫squeda,
  * un borrado. Splay trae con sigo el nodo ya sea insertado, borrado o 
- * buscado junto con sus hijos a la raÌz de esta manera quedan "cerca"
- * los nodos m·s cercanos a este.
+ * buscado junto con sus hijos a la ra√≠z de esta manera quedan "cerca"
+ * los nodos m√°s cercanos a este.
  * 
- * Autor: Mauricio AvilÈs y JosuÈ Hidalgo
+ * Autor: Mauricio Avil√©s y Josu√© Hidalgo
  * 
  */
 
@@ -121,7 +121,7 @@ private:
         *result = current->element;
         last = current->parent;
 
-        // øTiene Hijos?
+        // ¬øTiene Hijos?
 
         // No tiene hijos
         if (current->childrenCount() == 0) {
@@ -132,7 +132,7 @@ private:
         if (current->childrenCount() == 1) {
             SNode<E>* onlyChild = current->getOnlyChild();
             if (onlyChild != nullptr)
-                onlyChild->parent = current->parent; // Actualiza el parent del hijo ˙nico
+                onlyChild->parent = current->parent; // Actualiza el parent del hijo √∫nico
             delete current;
             return onlyChild;
         }
@@ -189,39 +189,39 @@ private:
     }
 
     void rotateRight(SNode<E> *current) {
-        // Tiene que existir raÌz y hijo izquierdo
+        // Tiene que existir ra√≠z y hijo izquierdo
         if (current == nullptr)
             throw runtime_error("Can't rotate right a null tree.");
         if (current->left == nullptr)
             throw runtime_error("Can't rotate right with a null left child.");
 
-        // Current apunta al nodo que ahora ser· hijo
-        // Temp apunta al nodo que ser· el pap· (el m·s arriba)
+        // Current apunta al nodo que ahora ser√° hijo
+        // Temp apunta al nodo que ser√° el pap√° (el m√°s arriba)
         SNode<E> *temp = current->left;
         
-        //Intercambio de Pap·s
+        //Intercambio de Pap√°s
         temp->parent = current->parent;
 
-        // Mi segundo nieto ahora ser· mi hijo
+        // Mi segundo nieto ahora ser√° mi hijo
         current->left = temp->right;
-        // Si exite ese nieto Èl me dir· pap·
+        // Si exite ese nieto √©l me dir√° pap√°
         if (current->left != nullptr)
             current->left->parent = current;
 
-        // El nuevo pap· reconoce a su antiguo pap· como hijo
+        // El nuevo pap√° reconoce a su antiguo pap√° como hijo
         temp->right = current;
         
-        //Intercambio de Pap·s
+        //Intercambio de Pap√°s
         current->parent = temp;
 
-        // Si el que ANTES era papa era Pap· Supremo ahora lo ser· el nuevo pap· (temp)
-        // Sino si mi pap· esta apuntando por uno u otro lado al que ahora es mi hijo
+        // Si el que ANTES era papa era Pap√° Supremo ahora lo ser√° el nuevo pap√° (temp)
+        // Sino si mi pap√° esta apuntando por uno u otro lado al que ahora es mi hijo
         // entonces reconozcame como su nuevo hijo.
         
-        // Current no tiene pap·
+        // Current no tiene pap√°
         if (current == root)
             root = temp;
-        // Current tenÌa un pap·
+        // Current ten√≠a un pap√°
         else if (temp->parent->right == current)
             temp->parent->right = temp;
         else
@@ -234,27 +234,27 @@ private:
         if (current->right == nullptr)
             throw runtime_error("Can't rotate right with a null right child.");
 
-        // Current apunta al nodo que ahora ser· hijo
-        // Temp apunta al nodo que ser· el pap· (el m·s arriba)
+        // Current apunta al nodo que ahora ser√° hijo
+        // Temp apunta al nodo que ser√° el pap√° (el m√°s arriba)
         SNode<E>* temp = current->right;
         
-        //Intercambio de Pap·s
+        //Intercambio de Pap√°s
         temp->parent = current->parent;
 
-        // Mi primer nieto ahora ser· mi segundo hijo
+        // Mi primer nieto ahora ser√° mi segundo hijo
         current->right = temp->left;
-        // Si exite ese nieto Èl me dir· pap·
+        // Si exite ese nieto √©l me dir√° pap√°
         if (current->right != nullptr)
             current->right->parent = current;
 
-        // El nuevo pap· reconoce a su antiguo pap· como hijo
+        // El nuevo pap√° reconoce a su antiguo pap√° como hijo
         temp->left = current;
 
-        //Intercambio de Pap·s
+        //Intercambio de Pap√°s
         current->parent = temp;
         
-        // Si el que ANTES era papa era Pap· Supremo ahora lo ser· el nuevo pap· (temp)
-        // Sino si mi pap· esta apuntando por uno u otro lado al que ahora es mi hijo
+        // Si el que ANTES era papa era Pap√° Supremo ahora lo ser√° el nuevo pap√° (temp)
+        // Sino si mi pap√° esta apuntando por uno u otro lado al que ahora es mi hijo
         // entonces reconozcame como su nuevo hijo.
         if (current == root)
             root = temp;
@@ -265,10 +265,10 @@ private:
     }
 
     void splay() {
-        // Last ya esta en la raÌz
+        // Last ya esta en la ra√≠z
         if (last == nullptr || last == root)
             return;
-        // Hasta que last estÈ en la raÌz
+        // Hasta que last est√© en la ra√≠z
         while (last != root) {
             // Si es hijo
             if (root->right == last) {

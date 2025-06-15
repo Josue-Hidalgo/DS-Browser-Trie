@@ -18,7 +18,6 @@
 #include <iostream>
 #include <stdexcept>
 #include "TrieNode.h"
-#include "SortedDLinkedList.h"
 #include "SplayTreeDictionary.h"
 
 using std::string;

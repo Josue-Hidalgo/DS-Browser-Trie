@@ -9,7 +9,7 @@
  * Equipo de Trabajo:
  * - Josue Santiago Hidalgo Sandoval
  * - Sebastián Masís Solano
- * - Marvin
+ * - Marvin 
  */
 
  // Importar las librerías necesarias
@@ -292,6 +292,101 @@ static void sort(List<KVPair<string, int>>*& list) {
 	}
 }
 
+// Auxiliary Functions
+static PrintMode seleccionarModoImpresion() {
+	int mode = 0;
+	while (mode != 1 && mode != 2) {
+		mode = inputInt("¿Cómo desea imprimir el resultado?\n1. Consola\n2. Archivo\nOpción: ");
+	}
+	return (mode == 2) ? PrintMode::Archivo : PrintMode::Consola;
+}
+static bool deseaImpresionCompleta() {
+	int fullMode = 0;
+	while (fullMode != 1 && fullMode != 2) {
+		fullMode = inputInt("¿Desea impresión completa de líneas?\n1. Sí (número y texto)\n2. No (solo números de línea)\nOpción: ");
+	}
+	return (fullMode == 1);
+}
+static void consultarPorPrefijo(Trie* book, Dictionary<char, char>* lowerCaseLetters, PrintMode printMode) {
+	string prefix = lowercase(lowerCaseLetters, inputString("Ingrese un prefijo a buscar: "));
+	List<KVPair<string, int>>* listMatches = book->getPrefixMatches(prefix);
+	sort(listMatches);
+	string output = "\nResultados de la Búsqueda: \n";
+	for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
+		auto pair = listMatches->getElement();
+		output += "Palabra: " + pair.key + ", Cantidad: " + std::to_string(pair.value) + "\n";
+	}
+	printer(output, printMode);
+	delete listMatches;
+}
+static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLetters, Dictionary<int, string>* lines, PrintMode printMode) {
+	bool impresionCompleta = deseaImpresionCompleta();
+	string word = lowercase(lowerCaseLetters, inputString("Ingrese una palabra a buscar: "));
+	List<int>* linesList = book->getListLines(word);
+	if (linesList->getSize() == 0) {
+		cout << "La palabra '" << word << "' no fue encontrada en el texto." << endl;
+		delete linesList;
+		return;
+	}
+	string output = "\nResultados de la Búsqueda: \n";
+	output += "La palabra '" + word + "' aparece " + std::to_string(linesList->getSize()) + " veces y fue encontrada en las siguientes líneas:\n";
+	for (linesList->goToStart(); !linesList->atEnd(); linesList->next()) {
+		int numLinea = linesList->getElement();
+		if (impresionCompleta && lines->contains(numLinea)) {
+			output += std::to_string(numLinea) + ": " + lines->getValue(numLinea) + "\n";
+		}
+		else {
+			output += std::to_string(numLinea) + ", ";
+		}
+	}
+	output += "\n";
+	printer(output, printMode);
+	delete linesList;
+}
+static void consultarPorCantidadLetras(Trie* book, PrintMode printMode) {
+	int letterNumber = inputInt("Ingrese la cantidad de letras a buscar: ");
+	List<KVPair<string, int>>* listMatches = book->getMatchesLetterNumber(letterNumber);
+	sort(listMatches);
+	string output = "\nResultados de la Búsqueda: \n";
+	for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
+		auto pair = listMatches->getElement();
+		output += "Palabra: " + pair.key + ", " + std::to_string(pair.value) + "\n";
+	}
+	printer(output, printMode);
+	delete listMatches;
+}
+static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMode) {
+	int topNumber = inputInt("¿Cuántas palabras quiere ver en el Top?: ");
+	List<KVPair<string, int>>* allWords = book->getAllWordsWithFrequency();
+	MaxHeap<KVPair<int, string>> heap(allWords->getSize());
+	for (allWords->goToStart(); !allWords->atEnd(); allWords->next()) {
+		auto pair = allWords->getElement();
+		if (!bookToIgnore->containsWord(pair.key)) {
+			heap.insert(KVPair<int, string>(pair.value, pair.key));
+		}
+	}
+	string output = "\nTop " + std::to_string(topNumber) + " palabras más utilizadas:\n";
+	for (int i = 0; i < topNumber && !heap.isEmpty(); ++i) {
+		auto entry = heap.removeFirst();
+		output += std::to_string(i + 1) + ". " + entry.value + " (" + std::to_string(entry.key) + " veces)\n";
+	}
+	printer(output, printMode);
+	delete allWords;
+}
+static void cargarArchivo(Trie* book, Dictionary<int, string>* lines, ifstream& file, string& fileName,
+	Dictionary<char, char>* abcLetters, Dictionary<char, char>* lowerCaseLetters) {
+	book->clear();
+	lines->clear();
+	if (file.is_open())
+		closeFile(file);
+	while (!file.is_open()) {
+		fileName = inputString("Ingrese el nombre del nuevo archivo (con extensión): \n");
+		file.open(fileName);
+	}
+	processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
+}
+
+
 int main() {
 	setlocale(LC_ALL, "spanish");
 	SetConsoleCP(1252);
@@ -345,131 +440,26 @@ int main() {
 			case 0:
 				cout << "Muchas gracias por usar nuestros servicios." << endl;
 				break;
-			case 1: {
-				int mode = 0;
-				PrintMode printMode;
-				while (mode != 1 && mode != 2) {
-					mode = inputInt("¿Cómo desea imprimir el resultado?\n1. Consola\n2. Archivo\nOpción: ");
-					printMode = (mode == 2) ? PrintMode::Archivo : PrintMode::Consola;
-				}
-
-				string prefix = inputString("Ingrese un prefijo a buscar: ");
-				prefix = lowercase(lowerCaseLetters, prefix);
-				List<KVPair<string, int>>* listMatches = book->getPrefixMatches(prefix);
-				sort(listMatches);
-
-				string output = "\nResultados de la Búsqueda: \n";
-				for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
-					KVPair<string, int> pair = listMatches->getElement();
-					output += "Palabra: " + pair.key + ", Cantidad: " + std::to_string(pair.value) + "\n";
-				}
-				printer(output, printMode);
-
-				delete listMatches;
+			case 1:
+				consultarPorPrefijo(book, lowerCaseLetters, seleccionarModoImpresion());
 				break;
-			}
-			case 2: {
-				int mode = 0;
-				PrintMode printMode;
-				while (mode != 1 && mode != 2) {
-					mode = inputInt("¿Cómo desea imprimir el resultado?\n1. Consola\n2. Archivo\nOpción: ");
-					printMode = (mode == 2) ? PrintMode::Archivo : PrintMode::Consola;
-				}
-
-				int fullMode = 0;
-				while (fullMode != 1 && fullMode != 2) {
-					fullMode = inputInt("¿Desea impresión completa de líneas?\n1. Sí (número y texto)\n2. No (solo números de línea)\nOpción: ");
-				}
-				bool imprimirCompleto = (fullMode == 1);
-
-				string word = inputString("Ingrese una palabra a buscar: ");
-				word = lowercase(lowerCaseLetters, word);
-				List<int>* linesList = book->getListLines(word);
-
-				if (linesList->getSize() == 0) {
-					cout << "La palabra '" << word << "' no fue encontrada en el texto." << endl;
-					delete linesList;
-					break;
-				}
-
-				string output = "\nResultados de la Búsqueda: \n";
-				output += "La palabra '" + word + "' aparece " + std::to_string(linesList->getSize()) + " veces y fue encontrada en las siguientes líneas:\n";
-				for (linesList->goToStart(); !linesList->atEnd(); linesList->next()) {
-					int numLinea = linesList->getElement();
-					if (imprimirCompleto && lines->contains(numLinea)) {
-						output += std::to_string(numLinea) + ": " + lines->getValue(numLinea) + "\n";
-					}
-					else {
-						output += std::to_string(numLinea) + ", ";
-					}
-				}
-				output += "\n";
-				printer(output, printMode);
-				delete linesList;
+			case 2:
+				consultarPorPalabra(book, lowerCaseLetters, lines, seleccionarModoImpresion());
 				break;
-			}
-			case 3: {
-				int mode = 0;
-				PrintMode printMode;
-				while (mode != 1 && mode != 2) {
-					mode = inputInt("¿Cómo desea imprimir el resultado?\n1. Consola\n2. Archivo\nOpción: ");
-					printMode = (mode == 2) ? PrintMode::Archivo : PrintMode::Consola;
-				}
-
-				int letterNumber = inputInt("Ingrese la cantidad de letras a buscar: ");
-				List<KVPair<string, int>>* listMatches = book->getMatchesLetterNumber(letterNumber);
-				sort(listMatches);
-				
-				string output = "\nResultados de la Búsqueda: \n";
-				for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
-					KVPair<string, int> pair = listMatches->getElement();
-					output += "Palabra: " + pair.key + ", " + std::to_string(pair.value) + "\n";
-				}
-				printer(output, printMode);
-				delete listMatches;
+			case 3:
+				consultarPorCantidadLetras(book, seleccionarModoImpresion());
 				break;
-			}
-			case 4: {
-				int mode = 0;
-				PrintMode printMode;
-				while (mode != 1 && mode != 2) {
-					mode = inputInt("¿Cómo desea imprimir el resultado?\n1. Consola\n2. Archivo\nOpción: ");
-					printMode = (mode == 2) ? PrintMode::Archivo : PrintMode::Consola;
-				}
-
-				int topNumber = inputInt("¿Cuántas palabras quiere ver en el Top?: ");
-				List<KVPair<string, int>>* allWords = book->getAllWordsWithFrequency();
-				MaxHeap<KVPair<int, string>> heap(allWords->getSize());
-				for (allWords->goToStart(); !allWords->atEnd(); allWords->next()) {
-					KVPair<string, int> pair = allWords->getElement();
-					if (!bookToIgnore->containsWord(pair.key)) {
-						KVPair<int, string> heapPair(pair.value, pair.key);
-						heap.insert(heapPair);
-					}
-				}
-				string output = "\nTop " + std::to_string(topNumber) + " palabras más utilizadas:\n";
-				for (int i = 0; i < topNumber && !heap.isEmpty(); ++i) {
-					KVPair<int, string> entry = heap.removeFirst();
-					output += std::to_string(i + 1) + ". " + entry.value + " (" + std::to_string(entry.key) + " veces)\n";
-				}
-				printer(output, printMode);
-				delete allWords;
+			case 4:
+				mostrarTopPalabras(book, bookToIgnore, seleccionarModoImpresion());
 				break;
-			}
-			case 5:{
-				book->clear();
-				lines->clear();
-				fileName = inputString("Ingrese el nombre del nuevo archivo (con extensión): \n");
-				if (file.is_open())
-					closeFile(file);
-				openFile(file, fileName);
-				processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
+			case 5:
+				cargarArchivo(book, lines, file, fileName, abcLetters, lowerCaseLetters);
 				break;
-			}
 			default:
 				cout << "Opción no válida. Por favor, ingrese un número entre 1 y 5." << endl;
 				break;
 			}
+
 			waitAndJump();
 		}
 	}

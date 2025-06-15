@@ -19,9 +19,6 @@
     <Filter Include="Archivos de encabezado\Diccionarios">
       <UniqueIdentifier>{0c6cfa65-5ff1-4cf3-82cb-8635d8dbd7e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\Prioridad">
-      <UniqueIdentifier>{b3246e11-d334-4ed9-a0ff-b001f6715e56}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\Tupla">
       <UniqueIdentifier>{34e911ff-15bf-4803-8138-d1993d0c46b6}</UniqueIdentifier>
     </Filter>
@@ -44,9 +41,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArrayList.h">
-      <Filter>Archivos de encabezado\Listas</Filter>
-    </ClInclude>
     <ClInclude Include="DLinkedList.h">
       <Filter>Archivos de encabezado\Listas</Filter>
     </ClInclude>
@@ -56,29 +50,14 @@
     <ClInclude Include="Dictionary.h">
       <Filter>Archivos de encabezado\Diccionarios</Filter>
     </ClInclude>
-    <ClInclude Include="SplayTree.h">
-      <Filter>Archivos de encabezado\Árboles</Filter>
-    </ClInclude>
     <ClInclude Include="MaxHeap.h">
       <Filter>Archivos de encabezado\Árboles</Filter>
-    </ClInclude>
-    <ClInclude Include="HeapPriorityQueue.h">
-      <Filter>Archivos de encabezado\Prioridad</Filter>
-    </ClInclude>
-    <ClInclude Include="PriorityQueue.h">
-      <Filter>Archivos de encabezado\Prioridad</Filter>
     </ClInclude>
     <ClInclude Include="KVPair.h">
       <Filter>Archivos de encabezado\Tupla</Filter>
     </ClInclude>
-    <ClInclude Include="SortedDLinkedList.h">
-      <Filter>Archivos de encabezado\Listas</Filter>
-    </ClInclude>
     <ClInclude Include="Trie.h">
       <Filter>Archivos de encabezado\Árboles</Filter>
-    </ClInclude>
-    <ClInclude Include="SNode.h">
-      <Filter>Archivos de encabezado\Nodos</Filter>
     </ClInclude>
     <ClInclude Include="TrieNode.h">
       <Filter>Archivos de encabezado\Nodos</Filter>
@@ -89,11 +68,17 @@
     <ClInclude Include="Def.h">
       <Filter>Archivos de encabezado\Macros</Filter>
     </ClInclude>
+    <ClInclude Include="HashTable.h">
+      <Filter>Archivos de encabezado\Diccionarios</Filter>
+    </ClInclude>
     <ClInclude Include="SplayTreeDictionary.h">
       <Filter>Archivos de encabezado\Diccionarios</Filter>
     </ClInclude>
-    <ClInclude Include="HashTable.h">
-      <Filter>Archivos de encabezado\Diccionarios</Filter>
+    <ClInclude Include="SNode.h">
+      <Filter>Archivos de encabezado\Nodos</Filter>
+    </ClInclude>
+    <ClInclude Include="SplayTree.h">
+      <Filter>Archivos de encabezado\Árboles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
