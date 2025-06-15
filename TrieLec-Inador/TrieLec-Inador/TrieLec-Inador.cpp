@@ -325,7 +325,6 @@ static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLet
 	List<int>* linesList = book->getListLines(word);
 	if (linesList->getSize() == 0) {
 		cout << "La palabra '" << word << "' no fue encontrada en el texto." << endl;
-		delete linesList;
 		return;
 	}
 	string output = "\nResultados de la Búsqueda: \n";
@@ -341,7 +340,6 @@ static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLet
 	}
 	output += "\n";
 	printer(output, printMode);
-	delete linesList;
 }
 static void consultarPorCantidadLetras(Trie* book, PrintMode printMode) {
 	int letterNumber = inputInt("Ingrese la cantidad de letras a buscar: ");
