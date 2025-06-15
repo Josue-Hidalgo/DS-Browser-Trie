@@ -43,6 +43,17 @@ using std::runtime_error;
 using std::ofstream;
 using std::ios_base;
 
+
+// Test - DSs
+static std::chrono::high_resolution_clock::time_point obtenerTiempoActual() {
+	return std::chrono::high_resolution_clock::now();
+}
+static void imprimirDiferenciaTiempo(const std::chrono::high_resolution_clock::time_point& inicio,
+	const std::chrono::high_resolution_clock::time_point& fin) {
+	auto duracion = std::chrono::duration_cast<std::chrono::milliseconds>(fin - inicio).count();
+	std::cout << "Tiempo transcurrido: " << duracion << " ms" << std::endl;
+}
+
 /*AUXILIARIES*/
 static void printWaitKey() {
 	cout << "Presione ENTER para continuar..." << endl;
@@ -309,7 +320,14 @@ static bool deseaImpresionCompleta() {
 }
 static void consultarPorPrefijo(Trie* book, Dictionary<char, char>* lowerCaseLetters, PrintMode printMode) {
 	string prefix = lowercase(lowerCaseLetters, inputString("Ingrese un prefijo a buscar: "));
+	
+	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
+
 	List<KVPair<string, int>>* listMatches = book->getPrefixMatches(prefix);
+	if (listMatches == nullptr || listMatches->getSize() == 0) {
+		cout << "No hay resultados con '" << prefix << "' número de letras." << endl;
+		return;
+	}
 	sort(listMatches);
 	string output = "\nResultados de la Búsqueda: \n";
 	for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
@@ -318,15 +336,20 @@ static void consultarPorPrefijo(Trie* book, Dictionary<char, char>* lowerCaseLet
 	}
 	printer(output, printMode);
 	delete listMatches;
+
+	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLetters, Dictionary<int, string>* lines, PrintMode printMode) {
 	bool impresionCompleta = deseaImpresionCompleta();
 	string word = lowercase(lowerCaseLetters, inputString("Ingrese una palabra a buscar: "));
-	List<int>* linesList = book->getListLines(word);
-	if (linesList == nullptr || linesList->getSize() == 0) {
+
+	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
+
+	if (!book->containsWord(word)) {
 		cout << "La palabra '" << word << "' no fue encontrada en el texto." << endl;
 		return;
 	}
+	List<int>* linesList = book->getListLines(word);
 	string output = "\nResultados de la Búsqueda: \n";
 	output += "La palabra '" + word + "' aparece " + std::to_string(linesList->getSize()) + " veces y fue encontrada en las siguientes líneas:\n";
 	for (linesList->goToStart(); !linesList->atEnd(); linesList->next()) {
@@ -340,10 +363,19 @@ static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLet
 	}
 	output += "\n";
 	printer(output, printMode);
+
+	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 static void consultarPorCantidadLetras(Trie* book, PrintMode printMode) {
 	int letterNumber = inputInt("Ingrese la cantidad de letras a buscar: ");
+
+	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
+
 	List<KVPair<string, int>>* listMatches = book->getMatchesLetterNumber(letterNumber);
+	if (listMatches == nullptr || listMatches->getSize() == 0) {
+		cout << "No hay resultados con '" << letterNumber << "' número de letras." << endl;
+		return;
+	}
 	sort(listMatches);
 	string output = "\nResultados de la Búsqueda: \n";
 	for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
@@ -352,9 +384,14 @@ static void consultarPorCantidadLetras(Trie* book, PrintMode printMode) {
 	}
 	printer(output, printMode);
 	delete listMatches;
+
+	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMode) {
 	int topNumber = inputInt("¿Cuántas palabras quiere ver en el Top?: ");
+	
+	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
+	
 	List<KVPair<string, int>>* allWords = book->getAllWordsWithFrequency();
 	MaxHeap<KVPair<int, string>> heap(allWords->getSize());
 	for (allWords->goToStart(); !allWords->atEnd(); allWords->next()) {
@@ -370,9 +407,13 @@ static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMo
 	}
 	printer(output, printMode);
 	delete allWords;
+
+	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 static void cargarArchivo(Trie* book, Dictionary<int, string>* lines, ifstream& file, string& fileName,
 	Dictionary<char, char>* abcLetters, Dictionary<char, char>* lowerCaseLetters) {
+
+	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 	book->clear();
 	lines->clear();
 	if (file.is_open())
@@ -382,16 +423,8 @@ static void cargarArchivo(Trie* book, Dictionary<int, string>* lines, ifstream& 
 		file.open(fileName);
 	}
 	processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
-}
 
-// Test - DSs
-static std::chrono::high_resolution_clock::time_point obtenerTiempoActual() {
-	return std::chrono::high_resolution_clock::now();
-}
-static void imprimirDiferenciaTiempo(const std::chrono::high_resolution_clock::time_point& inicio,
-	const std::chrono::high_resolution_clock::time_point& fin) {
-	auto duracion = std::chrono::duration_cast<std::chrono::milliseconds>(fin - inicio).count();
-	std::cout << "Tiempo transcurrido: " << duracion << " ms" << std::endl;
+	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 
 int main() {
@@ -414,12 +447,12 @@ int main() {
 	Trie* book = new Trie();
 	Trie* bookToIgnore = new Trie();
 
-	Dictionary<char, char>* abcLetters = new HashTable<char, char>();
+	Dictionary<char, char>* abcLetters = new SplayTreeDictionary<char, char>();
 	abecedaryDictionary(abcLetters);
-	Dictionary<char, char>* lowerCaseLetters = new HashTable<char, char>();
+	Dictionary<char, char>* lowerCaseLetters = new SplayTreeDictionary<char, char>();
 	lowercaseDictionary(lowerCaseLetters);
 
-	Dictionary<int, string>* lines = new HashTable<int, string>();
+	Dictionary<int, string>* lines = new SplayTreeDictionary<int, string>();
 	Dictionary<int, string>* notSave = nullptr;
 
 	try {
@@ -452,34 +485,19 @@ int main() {
 				cout << "Muchas gracias por usar nuestros servicios." << endl;
 				break;
 			case 1:
-				inicio = obtenerTiempoActual();
 				consultarPorPrefijo(book, lowerCaseLetters, seleccionarModoImpresion());
-				fin = obtenerTiempoActual();
-				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			case 2:
-				inicio = obtenerTiempoActual();
 				consultarPorPalabra(book, lowerCaseLetters, lines, seleccionarModoImpresion());
-				fin = obtenerTiempoActual();
-				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			case 3:
-				inicio = obtenerTiempoActual();
 				consultarPorCantidadLetras(book, seleccionarModoImpresion());
-				fin = obtenerTiempoActual();
-				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			case 4:
-				inicio = obtenerTiempoActual();
 				mostrarTopPalabras(book, bookToIgnore, seleccionarModoImpresion());
-				fin = obtenerTiempoActual();
-				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			case 5:
-				inicio = obtenerTiempoActual();
 				cargarArchivo(book, lines, file, fileName, abcLetters, lowerCaseLetters);
-				fin = obtenerTiempoActual();
-				imprimirDiferenciaTiempo(inicio, fin);
 				break;
 			default:
 				cout << "Opción no válida. Por favor, ingrese un número entre 1 y 5." << endl;

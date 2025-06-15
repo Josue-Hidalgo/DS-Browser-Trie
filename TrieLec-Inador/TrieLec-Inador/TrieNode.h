@@ -30,7 +30,7 @@ public:
 		isFinal = false;
 		prefixCount = 0;
 		letterCount = 0;
-		children = new HashTable<char, TrieNode*>();
+		children = new SplayTreeDictionary<char, TrieNode*>();
 		lines = new DLinkedList<int>();
 	}
 	~TrieNode() {
