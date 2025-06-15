@@ -321,7 +321,7 @@ static bool deseaImpresionCompleta() {
 static void consultarPorPrefijo(Trie* book, Dictionary<char, char>* lowerCaseLetters, PrintMode printMode) {
 	string prefix = lowercase(lowerCaseLetters, inputString("Ingrese un prefijo a buscar: "));
 	
-	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
+	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 
 	List<KVPair<string, int>>* listMatches = book->getPrefixMatches(prefix);
 	if (listMatches == nullptr || listMatches->getSize() == 0) {
@@ -337,13 +337,13 @@ static void consultarPorPrefijo(Trie* book, Dictionary<char, char>* lowerCaseLet
 	printer(output, printMode);
 	delete listMatches;
 
-	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
+	//imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLetters, Dictionary<int, string>* lines, PrintMode printMode) {
 	bool impresionCompleta = deseaImpresionCompleta();
 	string word = lowercase(lowerCaseLetters, inputString("Ingrese una palabra a buscar: "));
 
-	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
+	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 
 	if (!book->containsWord(word)) {
 		cout << "La palabra '" << word << "' no fue encontrada en el texto." << endl;
@@ -364,12 +364,12 @@ static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLet
 	output += "\n";
 	printer(output, printMode);
 
-	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
+	//imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 static void consultarPorCantidadLetras(Trie* book, PrintMode printMode) {
 	int letterNumber = inputInt("Ingrese la cantidad de letras a buscar: ");
 
-	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
+	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 
 	List<KVPair<string, int>>* listMatches = book->getMatchesLetterNumber(letterNumber);
 	if (listMatches == nullptr || listMatches->getSize() == 0) {
@@ -385,12 +385,12 @@ static void consultarPorCantidadLetras(Trie* book, PrintMode printMode) {
 	printer(output, printMode);
 	delete listMatches;
 
-	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
+	//(inicio, obtenerTiempoActual());
 }
 static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMode) {
 	int topNumber = inputInt("¿Cuántas palabras quiere ver en el Top?: ");
 	
-	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
+	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 	
 	List<KVPair<string, int>>* allWords = book->getAllWordsWithFrequency();
 	MaxHeap<KVPair<int, string>> heap(allWords->getSize());
@@ -408,7 +408,7 @@ static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMo
 	printer(output, printMode);
 	delete allWords;
 
-	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
+	//imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 static void cargarArchivo(Trie* book, Dictionary<int, string>* lines, ifstream& file, string& fileName,
 	Dictionary<char, char>* abcLetters, Dictionary<char, char>* lowerCaseLetters) {
