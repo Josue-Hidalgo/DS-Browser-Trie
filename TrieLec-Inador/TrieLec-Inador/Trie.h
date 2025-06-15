@@ -62,7 +62,7 @@ private:
 	}
 
 	// Metodos Privados para Proyecto
-	void getPrefixMatches(TrieNode* current, string prefix, List<KVPair<string, int>>* matches) {
+	void getPrefixMatchesAux(TrieNode* current, string prefix, List<KVPair<string, int>>* matches) {
 		if (current->isFinal) { // Caso Base: final de palabra
 			KVPair<string, int> pair(prefix, current->lines->getSize()); // Pair (Prefijo, Cantidad en Texto)
 			matches->append(pair);
@@ -72,7 +72,7 @@ private:
 		for (children->goToStart(); !children->atEnd(); children->next()) {
 			char c = children->getElement();
 			TrieNode* child = current->getChild(c);
-			getPrefixMatches(child, prefix + c, matches);
+			getPrefixMatchesAux(child, prefix + c, matches);
 		}
 		delete children;
 	}
@@ -91,6 +91,23 @@ private:
 		}
 		delete children;
 	}
+
+	void getAllWordsWithFrequencyAux(TrieNode* current, string prefix, List<KVPair<string, int>>* result) {
+		if (current->isFinal) {
+			int count = current->lines->getSize();
+			KVPair<string, int> pair(prefix, count);
+			result->append(pair);
+		}
+
+		List<char>* children = current->getChildren();
+		for (children->goToStart(); !children->atEnd(); children->next()) {
+			char c = children->getElement();
+			TrieNode* child = current->getChild(c);
+			getAllWordsWithFrequencyAux(child, prefix + c, result);
+		}
+		delete children;
+	}
+
 
 public:
 	Trie() {
@@ -126,7 +143,7 @@ public:
 		}
 		current->prefixCount++;
 		current->isFinal = true;
-		current->lines->append(lineNumber);
+		//current->lines->append(lineNumber);
 	}
 
 	bool containsWord(string word) {
@@ -208,7 +225,7 @@ public:
 		List<KVPair<string, int>>* matches = new DLinkedList<KVPair<string, int>>();
 		TrieNode* current = findNode(prefix);
 		if (current != nullptr)
-			getPrefixMatches(current, prefix, matches);
+			getPrefixMatchesAux(current, prefix, matches);
 		return matches;
 	}
 
@@ -225,28 +242,10 @@ public:
 		return matches;
 	}
 
-	void getAllWordsWithFrequencyAux(TrieNode* current, string prefix, List<KVPair<string, int>>* result) {
-		if (current->isFinal) {
-			int count = current->lines->getSize();
-			KVPair<string, int> pair(prefix, count);
-			result->append(pair);
-		}
-
-		List<char>* children = current->getChildren();
-		for (children->goToStart(); !children->atEnd(); children->next()) {
-			char c = children->getElement();
-			TrieNode* child = current->getChild(c);
-			getAllWordsWithFrequencyAux(child, prefix + c, result);
-		}
-		delete children;
-	}
-
-	List<KVPair<string, int>>* getAllWordsWithFrequency() {
+	List<KVPair<string, int>>* getAllWordsWithFrequency() { // d. Obtener todas las palabras con su frecuencia 
 		List<KVPair<string, int>>* result = new DLinkedList<KVPair<string, int>>();
 		getAllWordsWithFrequencyAux(root, "", result);
 		return result;
 	}
-
-
 };
 

@@ -19,9 +19,6 @@
     <Filter Include="Archivos de encabezado\Diccionarios">
       <UniqueIdentifier>{0c6cfa65-5ff1-4cf3-82cb-8635d8dbd7e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\¡rboles">
-      <UniqueIdentifier>{7d6a75cf-10c9-437e-88ad-12262861c37b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\Prioridad">
       <UniqueIdentifier>{b3246e11-d334-4ed9-a0ff-b001f6715e56}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,9 @@
     </Filter>
     <Filter Include="Archivos de recursos\Archivos de Texto">
       <UniqueIdentifier>{c9505943-4009-4e37-98cb-b6e84282dd5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\√Årboles">
+      <UniqueIdentifier>{7d6a75cf-10c9-437e-88ad-12262861c37b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,10 +57,10 @@
       <Filter>Archivos de encabezado\Diccionarios</Filter>
     </ClInclude>
     <ClInclude Include="SplayTree.h">
-      <Filter>Archivos de encabezado\¡rboles</Filter>
+      <Filter>Archivos de encabezado\√Årboles</Filter>
     </ClInclude>
     <ClInclude Include="MaxHeap.h">
-      <Filter>Archivos de encabezado\¡rboles</Filter>
+      <Filter>Archivos de encabezado\√Årboles</Filter>
     </ClInclude>
     <ClInclude Include="HeapPriorityQueue.h">
       <Filter>Archivos de encabezado\Prioridad</Filter>
@@ -75,7 +75,7 @@
       <Filter>Archivos de encabezado\Listas</Filter>
     </ClInclude>
     <ClInclude Include="Trie.h">
-      <Filter>Archivos de encabezado\¡rboles</Filter>
+      <Filter>Archivos de encabezado\√Årboles</Filter>
     </ClInclude>
     <ClInclude Include="SNode.h">
       <Filter>Archivos de encabezado\Nodos</Filter>

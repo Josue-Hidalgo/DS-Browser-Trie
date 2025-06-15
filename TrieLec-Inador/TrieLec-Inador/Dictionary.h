@@ -32,5 +32,6 @@ public:
 	virtual List<V>* getValues() = 0;
 	virtual int getSize() = 0;
 	virtual void print() = 0;
+	virtual void clear() = 0;
 };
 
