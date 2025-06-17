@@ -2,12 +2,12 @@
  *
  * Nombre de Archivo: MaxHeap.h
  *
- * Descripción General:
+ * Descripciï¿½n General:
  *
- * Este archivo contiene la implementación de una clase MaxHeap, que es un
- * montículo máximo. Esta estructura de datos permite almacenar elementos de
- * valor numérico y mantener la propiedad de montículo, donde el elemento
- * que se encuentra en la raíz es el mayor de todos los elementos.
+ * Este archivo contiene la implementaciï¿½n de una clase MaxHeap, que es un
+ * montï¿½culo mï¿½ximo. Esta estructura de datos permite almacenar elementos de
+ * valor numï¿½rico y mantener la propiedad de montï¿½culo, donde el elemento
+ * que se encuentra en la raï¿½z es el mayor de todos los elementos.
  *
  * Autor: Josue Hidalgo
  *
@@ -88,6 +88,30 @@ public:
 		delete[] elements;
 	}
 
+	// Constructor de copia
+	MaxHeap(const MaxHeap<E>& other) {
+		max = other.max;
+		size = other.size;
+		elements = new E[max];
+		for (int i = 0; i < size; ++i) {
+			elements[i] = other.elements[i];
+		}
+	}
+
+	// Operador de asignaciÃ³n
+	MaxHeap<E>& operator=(const MaxHeap<E>& other) {
+		if (this != &other) {
+			delete[] elements;  // liberar memoria previa
+			max = other.max;
+			size = other.size;
+			elements = new E[max];
+			for (int i = 0; i < size; ++i) {
+				elements[i] = other.elements[i];
+			}
+		}
+		return *this;
+	}
+	
 	void insert(E element) {
 		if (size == max)
 			throw runtime_error("Heap is full.");
