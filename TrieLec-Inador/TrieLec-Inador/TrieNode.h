@@ -7,7 +7,7 @@
  * de datos Trie. Cada nodo contiene información sobre si es un
  * nodo final de una palabra, el conteo de prefijos que pasan.
  * 
- * Autor: Mauricio Avilés // Josué Hidalgo
+ * Autor: Mauricio Avilés // Josué Hidalgo y Sebastián Masís
  * 
  */
 
@@ -30,7 +30,7 @@ public:
 		isFinal = false;
 		prefixCount = 0;
 		letterCount = 0;
-		children = new SplayTreeDictionary<char, TrieNode*>();
+		children = new HashTable<char, TrieNode*>();
 		lines = new DLinkedList<int>();
 	}
 	~TrieNode() {

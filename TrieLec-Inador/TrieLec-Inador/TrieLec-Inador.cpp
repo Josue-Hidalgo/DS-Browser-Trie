@@ -36,6 +36,7 @@ using std::cin;
 using std::stoi;
 using std::endl;
 using std::getline;
+using std::ostringstream;
 using std::string;
 using std::ifstream;
 using std::invalid_argument;
@@ -271,36 +272,33 @@ static string normalize(const string& word) {
 	}
 	return result;
 }
-static void sort(List<KVPair<string, int>>*& list) {
+void sort(List<KVPair<string, List<int>*>>*& list) {
 	int n = list->getSize();
 	if (n <= 1) return;
 
 	for (int gap = n / 2; gap > 0; gap /= 2) {
 		for (int i = gap; i < n; i++) {
 			list->goToPos(i);
-			KVPair<string, int> temp = list->getElement();
+			auto temp = list->getElement();
 			string tempKey = normalize(temp.key);
 
 			int j = i;
 			while (j >= gap) {
 				list->goToPos(j - gap);
-				KVPair<string, int> prev = list->getElement();
-				string prevKey = normalize(prev.key);
-
-				if (prevKey > tempKey) {
+				auto prev = list->getElement();
+				if (normalize(prev.key) > tempKey) {
 					list->goToPos(j);
-					list->remove();          // Eliminamos el actual
-					list->insert(prev);      // Insertamos el anterior
+					list->remove();
+					list->insert(prev);
 				}
 				else {
 					break;
 				}
-
 				j -= gap;
 			}
 			list->goToPos(j);
-			list->remove();              // Eliminamos lo que quedó
-			list->insert(temp);         // Insertamos el original
+			list->remove();
+			list->insert(temp);
 		}
 	}
 }
@@ -320,24 +318,29 @@ static bool deseaImpresionCompleta() {
 }
 static void consultarPorPrefijo(Trie* book, Dictionary<char, char>* lowerCaseLetters, PrintMode printMode) {
 	string prefix = lowercase(lowerCaseLetters, inputString("Ingrese un prefijo a buscar: "));
-	
-	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 
-	List<KVPair<string, int>>* listMatches = book->getPrefixMatches(prefix);
+	auto listMatches = book->getPrefixMatches(prefix); // ahora retorna List<KVPair<string, List<int>*>>
 	if (listMatches == nullptr || listMatches->getSize() == 0) {
-		cout << "No hay resultados con '" << prefix << "' número de letras." << endl;
+		cout << "No hay resultados con '" << prefix << "'." << endl;
 		return;
 	}
 	sort(listMatches);
+
 	string output = "\nResultados de la Búsqueda: \n";
 	for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
 		auto pair = listMatches->getElement();
-		output += "Palabra: " + pair.key + ", Cantidad: " + std::to_string(pair.value) + "\n";
+		output += "\nPalabra: " + pair.key + "\n";
+		output += "Aparece en líneas: ";
+		pair.value->goToStart();
+		while (!pair.value->atEnd()) {
+			output += std::to_string(pair.value->getElement());
+			pair.value->next();
+			if (!pair.value->atEnd()) output += ", ";
+		}
 	}
+	cout << endl;
 	printer(output, printMode);
 	delete listMatches;
-
-	//imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLetters, Dictionary<int, string>* lines, PrintMode printMode) {
 	bool impresionCompleta = deseaImpresionCompleta();
@@ -350,42 +353,50 @@ static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLet
 		return;
 	}
 	List<int>* linesList = book->getListLines(word);
-	string output = "\nResultados de la Búsqueda: \n";
-	output += "La palabra '" + word + "' aparece " + std::to_string(linesList->getSize()) + " veces y fue encontrada en las siguientes líneas:\n";
+	ostringstream output;
+	output << "\nResultados de la Búsqueda: \n";
+	output << "La palabra '" << word << "' aparece " << linesList->getSize() << " veces y fue encontrada en las siguientes líneas:\n";
+
 	for (linesList->goToStart(); !linesList->atEnd(); linesList->next()) {
 		int numLinea = linesList->getElement();
 		if (impresionCompleta && lines->contains(numLinea)) {
-			output += std::to_string(numLinea) + ": " + lines->getValue(numLinea) + "\n";
+			output << numLinea << ": " << lines->getValue(numLinea) << "\n";
 		}
 		else {
-			output += std::to_string(numLinea) + ", ";
+			output << numLinea;
+			if (!linesList->atEnd()) output << ", ";
 		}
 	}
-	output += "\n";
-	printer(output, printMode);
+
+	printer(output.str(), printMode);
 
 	//imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 static void consultarPorCantidadLetras(Trie* book, PrintMode printMode) {
 	int letterNumber = inputInt("Ingrese la cantidad de letras a buscar: ");
 
-	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
-
-	List<KVPair<string, int>>* listMatches = book->getMatchesLetterNumber(letterNumber);
+	auto listMatches = book->getMatchesLetterNumber(letterNumber); // también retorna líneas ahora
 	if (listMatches == nullptr || listMatches->getSize() == 0) {
 		cout << "No hay resultados con '" << letterNumber << "' número de letras." << endl;
 		return;
 	}
 	sort(listMatches);
+
 	string output = "\nResultados de la Búsqueda: \n";
 	for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
 		auto pair = listMatches->getElement();
-		output += "Palabra: " + pair.key + ", " + std::to_string(pair.value) + "\n";
+		output += "\nPalabra: " + pair.key + "\n";
+		output += "Aparece en líneas: ";
+		pair.value->goToStart();
+		while (!pair.value->atEnd()) {
+			output += std::to_string(pair.value->getElement());
+			pair.value->next();
+			if (!pair.value->atEnd()) output += ", ";
+		}
 	}
+	cout << endl;
 	printer(output, printMode);
 	delete listMatches;
-
-	//(inicio, obtenerTiempoActual());
 }
 static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMode) {
 	int topNumber = inputInt("¿Cuántas palabras quiere ver en el Top?: ");
@@ -447,12 +458,12 @@ int main() {
 	Trie* book = new Trie();
 	Trie* bookToIgnore = new Trie();
 
-	Dictionary<char, char>* abcLetters = new SplayTreeDictionary<char, char>();
+	Dictionary<char, char>* abcLetters = new HashTable<char, char>();
 	abecedaryDictionary(abcLetters);
-	Dictionary<char, char>* lowerCaseLetters = new SplayTreeDictionary<char, char>();
+	Dictionary<char, char>* lowerCaseLetters = new HashTable<char, char>();
 	lowercaseDictionary(lowerCaseLetters);
 
-	Dictionary<int, string>* lines = new SplayTreeDictionary<int, string>();
+	Dictionary<int, string>* lines = new HashTable<int, string>();
 	Dictionary<int, string>* notSave = nullptr;
 
 	try {
@@ -497,7 +508,19 @@ int main() {
 				mostrarTopPalabras(book, bookToIgnore, seleccionarModoImpresion());
 				break;
 			case 5:
-				cargarArchivo(book, lines, file, fileName, abcLetters, lowerCaseLetters);
+				book->clear();
+				lines->clear();
+
+				fileName = inputString("Ingrese el nombre del nuevo archivo (con extensión): \n");
+				closeFile(file);
+				openFile(file, fileName);
+				openFile(ignoreFile, "Libros/ignorar.txt");
+
+				processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
+				processLinePerLine(ignoreFile, bookToIgnore, abcLetters, lowerCaseLetters, notSave);
+
+				closeFile(file);
+				break;
 				break;
 			default:
 				cout << "Opción no válida. Por favor, ingrese un número entre 1 y 5." << endl;
