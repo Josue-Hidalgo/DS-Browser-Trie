@@ -25,13 +25,15 @@ public:
 	int letterCount;
 	Dictionary<char, TrieNode*>* children;
 	List<int>* lines;
+	List<int>* wordLines;
 
 	TrieNode() {
 		isFinal = false;
 		prefixCount = 0;
 		letterCount = 0;
-		children = new SplayTreeDictionary<char, TrieNode*>();
+		children = new HashTable<char, TrieNode*>();
 		lines = new DLinkedList<int>();
+		wordLines = new DLinkedList<int>();
 	}
 	~TrieNode() {
 		delete lines;

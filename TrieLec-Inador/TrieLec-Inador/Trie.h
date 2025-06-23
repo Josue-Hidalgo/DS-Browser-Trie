@@ -61,9 +61,9 @@ private:
 	}
 
 	// Metodos Privados para Proyecto
-	void getPrefixMatchesAux(TrieNode* current, string prefix, List<KVPair<string, int>>* matches) {
+	void getPrefixMatchesAux(TrieNode* current, string prefix, List< KVPair< string, List<int>* > >* matches) {
 		if (current->isFinal) { // Caso Base: final de palabra
-			KVPair<string, int> pair(prefix, current->lines->getSize()); // Pair (Prefijo, Cantidad en Texto)
+			KVPair<string, List<int>*> pair(prefix, current->lines); // Pair (Prefijo, Cantidad en Texto)
 			matches->append(pair);
 		}
 
@@ -76,9 +76,9 @@ private:
 		delete children;
 	}
 
-	void getMatchesLetterNumberAux(TrieNode* current, const int letterNumber, string prefix, List<KVPair<string, int>>* matches) {
+	void getMatchesLetterNumberAux(TrieNode* current, const int letterNumber, string prefix, List<KVPair<string, List<int>*>>* matches) {
 		if (current->isFinal && current->letterCount == letterNumber) { // Caso Base: el conteo de prefijo es el mismo que el conteo de letras pedido
-			KVPair<string, int> pair(prefix, current->lines->getSize()); // Pair (Prefijo, Cantidad en Texto)
+			KVPair<string, List<int>*> pair(prefix, current->lines); // Pair (Prefijo, Cantidad en Texto)
 			matches->append(pair);
 		}
 
@@ -107,7 +107,6 @@ private:
 		delete children;
 	}
 
-
 public:
 	Trie() {
 		root = new TrieNode();
@@ -127,6 +126,7 @@ public:
 		if (containsWord(word)) {
 			current = findNode(word);
 			current->lines->append(lineNumber);
+			current->wordLines->append(lineNumber);
 			return;
 		}
 
@@ -142,7 +142,7 @@ public:
 		}
 		current->prefixCount++;
 		current->isFinal = true;
-		//current->lines->append(lineNumber);
+		current->wordLines->append(lineNumber);
 	}
 
 	bool containsWord(string word) {
@@ -220,8 +220,8 @@ public:
 		delete words;
 	}
 
-	List<KVPair<string, int>>* getPrefixMatches(string prefix) { // a. Consulta por Prefijo (if(containsPrefix(w))) // a. Palabra (if(containsWord(w)))
-		List<KVPair<string, int>>* matches = new DLinkedList<KVPair<string, int>>();
+	List<KVPair<string, List<int>*>>* getPrefixMatches(string prefix) { // a. Consulta por Prefijo (if(containsPrefix(w))) // a. Palabra (if(containsWord(w)))
+		List<KVPair<string, List<int>*>>* matches = new DLinkedList<KVPair<string, List<int>*>>();
 		TrieNode* current = findNode(prefix);
 		if (current != nullptr)
 			getPrefixMatchesAux(current, prefix, matches);
@@ -232,11 +232,11 @@ public:
 		if (!containsWord(word))
 			throw runtime_error("Word was not found.");
 		TrieNode* current = findNode(word);
-		return current->lines;
+		return current->wordLines;
 	}
 
-	List<KVPair<string, int>>* getMatchesLetterNumber(int letterNumber) { // c. Buscar por cantidad de letras
-		List<KVPair<string, int>>* matches = new DLinkedList<KVPair<string, int>>();
+	List<KVPair<string, List<int>*>>* getMatchesLetterNumber(int letterNumber) { // c. Buscar por cantidad de letras
+		List<KVPair<string, List<int>*>>* matches = new DLinkedList<KVPair<string, List<int>*>>();
 		getMatchesLetterNumberAux(root, letterNumber, "", matches);
 		return matches;
 	}

@@ -36,6 +36,7 @@ using std::cin;
 using std::stoi;
 using std::endl;
 using std::getline;
+using std::to_string;
 using std::string;
 using std::ifstream;
 using std::invalid_argument;
@@ -104,15 +105,18 @@ static string inputString(const string& message) {
 
 /*PRINTS*/
 static void printWelcomeMessage() {
-	cout << "Bienvenido al programa TrieLec-Inador" << endl;
+	cout << "Bienvenido al programa..." << endl << endl;
 
+	cout << "<<--------------------------------------------------------------------------------------------------------->>" << endl;
 	cout << "___________      .__       .____                           .___               __                " << endl;
 	cout << "\\__    ___/______|__| ____ |    |    ____   ____           |   | ____ _____ _/  |_  ___________ " << endl;
 	cout << "  |    |  \\_  __ \\  |/ __ \\|    |  _/ __ \\_/ ___\\   ______ |   |/    \\ \\__ \\\\   __\\/  _ \\_  __ \\" << endl;
 	cout << "  |    |   |  | \\/  \\  ___/|    |__\\  ___/\\  \\___  /_____/ |   |   |  \\/ __ \\|  | (  <_> )  | \\/" << endl;
 	cout << "  |____|   |__|  |__|\\___  >_______ \\___  >\\___  >         |___|___|  (____  /__|  \\____/|__|   " << endl;
 	cout << "                         \\/        \\/   \\/     \\/                   \\/     \\/                   " << endl;
+	cout << "<<--------------------------------------------------------------------------------------------------------->>" << endl << endl;
 
+	cout << "Descripción General:" << endl;
 	cout << "El actual proyecto consiste en la implementación de un árbol trie con palabras obtenidas de un archivo de texto" << endl;
 	cout << "en formato ANSI con el fin de consultar y obtener información relevante sobre el archivo analizado como : " << endl;
 	cout << "1. Lista de palabras coincidentes con respecto a una palabra o prefijo." << endl;
@@ -304,6 +308,39 @@ static void sort(List<KVPair<string, int>>*& list) {
 		}
 	}
 }
+static void sort2(List<KVPair<string, List<int>*>>*& list) {
+	int n = list->getSize();
+	if (n <= 1) return;
+
+	for (int gap = n / 2; gap > 0; gap /= 2) {
+		for (int i = gap; i < n; i++) {
+			list->goToPos(i);
+			KVPair<string, List<int>*> temp = list->getElement();
+			string tempKey = normalize(temp.key);
+
+			int j = i;
+			while (j >= gap) {
+				list->goToPos(j - gap);
+				KVPair<string, List<int>*> prev = list->getElement();
+				string prevKey = normalize(prev.key);
+
+				if (prevKey > tempKey) {
+					list->goToPos(j);
+					list->remove();          // Eliminamos el actual
+					list->insert(prev);      // Insertamos el anterior
+				}
+				else {
+					break;
+				}
+
+				j -= gap;
+			}
+			list->goToPos(j);
+			list->remove();              // Eliminamos lo que quedó
+			list->insert(temp);         // Insertamos el original
+		}
+	}
+}
 
 // Auxiliary Functions
 static PrintMode seleccionarModoImpresion() {
@@ -318,21 +355,39 @@ static bool deseaImpresionCompleta() {
 		fullMode = inputInt("¿Desea impresión completa de líneas?\n1. Sí (número y texto)\n2. No (solo números de línea)\nOpción: ");
 	return (fullMode == 1);
 }
-static void consultarPorPrefijo(Trie* book, Dictionary<char, char>* lowerCaseLetters, PrintMode printMode) {
+static void consultarPorPrefijo(Trie* book, Dictionary<char, char>* lowerCaseLetters, PrintMode printMode, Dictionary<int, string>* lines) {
+	bool impresionCompleta = deseaImpresionCompleta();
 	string prefix = lowercase(lowerCaseLetters, inputString("Ingrese un prefijo a buscar: "));
-	
+	printNewPage();
 	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 
-	List<KVPair<string, int>>* listMatches = book->getPrefixMatches(prefix);
+	List<KVPair<string, List<int>*>>* listMatches = book->getPrefixMatches(prefix);
 	if (listMatches == nullptr || listMatches->getSize() == 0) {
 		cout << "No hay resultados con '" << prefix << "' número de letras." << endl;
 		return;
 	}
-	sort(listMatches);
-	string output = "\nResultados de la Búsqueda: \n";
+
+	sort2(listMatches);
+
+	string output = "\n<<--------------------------------------------------------------------------------------------------------->>\n";
+	output += "Resultados de la Búsqueda: \n";
+	output += "<<--------------------------------------------------------------------------------------------------------->>\n\n";
+
 	for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
 		auto pair = listMatches->getElement();
-		output += "Palabra: " + pair.key + ", Cantidad: " + std::to_string(pair.value) + "\n";
+		if (impresionCompleta){
+			output += "Palabra Encontrada: " + pair.key + ", Cantidad: " + to_string(pair.value->getSize()) + "\nLíneas en las que se encuentra: \n";
+			for (pair.value->goToStart(); !pair.value->atEnd(); pair.value->next()) {
+				int numLinea = pair.value->getElement();
+				if (lines->contains(numLinea))
+					output += to_string(numLinea) + ": " + lines->getValue(numLinea) + "\n";
+				else
+					output += to_string(numLinea) + "\n";
+			}
+			output += "\n";
+		}
+		else
+			output += "Palabra: " + pair.key + ", Cantidad: " + to_string(pair.value->getSize()) + "\n\n";
 	}
 	printer(output, printMode);
 	delete listMatches;
@@ -350,60 +405,83 @@ static void consultarPorPalabra(Trie* book, Dictionary<char, char>* lowerCaseLet
 		return;
 	}
 	List<int>* linesList = book->getListLines(word);
-	string output = "\nResultados de la Búsqueda: \n";
+	
+	string output = "\n<<--------------------------------------------------------------------------------------------------------->>\n";
+	output += "Resultados de la Búsqueda: \n";
+	output += "<<--------------------------------------------------------------------------------------------------------->>\n\n";
+
 	output += "La palabra '" + word + "' aparece " + std::to_string(linesList->getSize()) + " veces y fue encontrada en las siguientes líneas:\n";
 	for (linesList->goToStart(); !linesList->atEnd(); linesList->next()) {
 		int numLinea = linesList->getElement();
-		if (impresionCompleta && lines->contains(numLinea)) {
+		if (impresionCompleta && lines->contains(numLinea))
 			output += std::to_string(numLinea) + ": " + lines->getValue(numLinea) + "\n";
-		}
-		else {
+		else
 			output += std::to_string(numLinea) + ", ";
-		}
 	}
 	output += "\n";
 	printer(output, printMode);
 
 	//imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
-static void consultarPorCantidadLetras(Trie* book, PrintMode printMode) {
+static void consultarPorCantidadLetras(Trie* book, PrintMode printMode, Dictionary<int, string>* lines) {
+	bool impresionCompleta = deseaImpresionCompleta();
 	int letterNumber = inputInt("Ingrese la cantidad de letras a buscar: ");
 
 	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 
-	List<KVPair<string, int>>* listMatches = book->getMatchesLetterNumber(letterNumber);
+	List<KVPair<string, List<int>*>>* listMatches = book->getMatchesLetterNumber(letterNumber);
 	if (listMatches == nullptr || listMatches->getSize() == 0) {
 		cout << "No hay resultados con '" << letterNumber << "' número de letras." << endl;
 		return;
 	}
-	sort(listMatches);
-	string output = "\nResultados de la Búsqueda: \n";
+
+	sort2(listMatches);
+
+	string output = "\n<<--------------------------------------------------------------------------------------------------------->>\n";
+	output += "Resultados de la Búsqueda: \n";
+	output += "<<--------------------------------------------------------------------------------------------------------->>\n\n";
+
 	for (listMatches->goToStart(); !listMatches->atEnd(); listMatches->next()) {
 		auto pair = listMatches->getElement();
-		output += "Palabra: " + pair.key + ", " + std::to_string(pair.value) + "\n";
+		if (impresionCompleta) {
+			output += "Palabra Encontrada: " + pair.key + ", Cantidad: " + to_string(pair.value->getSize()) + "\nLíneas en las que se encuentra: \n";
+			for (pair.value->goToStart(); !pair.value->atEnd(); pair.value->next()) {
+				int numLinea = pair.value->getElement();
+				if (lines->contains(numLinea))
+					output += to_string(numLinea) + ": " + lines->getValue(numLinea) + "\n";
+				else
+					output += to_string(numLinea) + "\n";
+			}
+			output += "\n";
+		}
+		else
+			output += "Palabra: " + pair.key + ", Cantidad: " + to_string(pair.value->getSize()) + "\n\n";
 	}
 	printer(output, printMode);
 	delete listMatches;
-
 	//(inicio, obtenerTiempoActual());
 }
-static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMode) {
+static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMode, Dictionary<int, string>* lines) {
+	bool impresionCompleta = deseaImpresionCompleta();
 	int topNumber = inputInt("¿Cuántas palabras quiere ver en el Top?: ");
-	
 	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 	
 	List<KVPair<string, int>>* allWords = book->getAllWordsWithFrequency();
 	MaxHeap<KVPair<int, string>> heap(allWords->getSize());
 	for (allWords->goToStart(); !allWords->atEnd(); allWords->next()) {
 		auto pair = allWords->getElement();
-		if (!bookToIgnore->containsWord(pair.key)) {
+		if (!bookToIgnore->containsWord(pair.key))
 			heap.insert(KVPair<int, string>(pair.value, pair.key));
-		}
 	}
 	string output = "\nTop " + std::to_string(topNumber) + " palabras más utilizadas:\n";
 	for (int i = 0; i < topNumber && !heap.isEmpty(); ++i) {
 		auto entry = heap.removeFirst();
-		output += std::to_string(i + 1) + ". " + entry.value + " (" + std::to_string(entry.key) + " veces)\n";
+		output += std::to_string(i + 1) + ". \t" + entry.value + "\t\t(" + std::to_string(entry.key) + " veces)\n";
+		if (impresionCompleta) {
+			List<int>* listLinesPerWord = book->getListLines(entry.value);
+			for (listLinesPerWord->goToStart(); !listLinesPerWord->atEnd(); listLinesPerWord->next())
+				output += "Linea " + to_string(listLinesPerWord->getElement()) + ": \t" + lines->getValue(listLinesPerWord->getElement()) + "\n\n";
+		}
 	}
 	printer(output, printMode);
 	delete allWords;
@@ -413,18 +491,21 @@ static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMo
 static void cargarArchivo(Trie* book, Dictionary<int, string>* lines, ifstream& file, string& fileName,
 	Dictionary<char, char>* abcLetters, Dictionary<char, char>* lowerCaseLetters) {
 
-	std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
+	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();
 	book->clear();
 	lines->clear();
 	if (file.is_open())
 		closeFile(file);
 	while (!file.is_open()) {
-		fileName = inputString("Ingrese el nombre del nuevo archivo (con extensión): \n");
+		cout << "<<--------------------------------------------------------------------------------------------------------->>" << endl;
+		cout << "\t\t\t\t\t\t<<ARCHIVO>>" << endl;
+		cout << "<<--------------------------------------------------------------------------------------------------------->>" << endl << endl;
+		fileName = inputString("Introduzca Nombre de Archivo: \n");
 		file.open(fileName);
 	}
 	processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
 
-	imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
+	//imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
 
 int main() {
@@ -438,7 +519,14 @@ int main() {
 	printWelcomeMessage();
 	waitAndJump();
 
-	string fileName = inputString("Ingrese el nombre del archivo (con extensión): \n");
+	cout << "<<--------------------------------------------------------------------------------------------------------->>" << endl;
+	cout << "\t\t\t\t\t\t<<ARCHIVO>>" << endl;
+	cout << "<<--------------------------------------------------------------------------------------------------------->>" << endl << endl;
+
+	string fileName = inputString("Introduzca Nombre de Archivo: \n");
+
+	printNewPage();
+	cout << "...";
 
 	ifstream file;
 	ifstream ignoreFile;
@@ -452,25 +540,27 @@ int main() {
 	Dictionary<char, char>* lowerCaseLetters = new SplayTreeDictionary<char, char>();
 	lowercaseDictionary(lowerCaseLetters);
 
-	Dictionary<int, string>* lines = new SplayTreeDictionary<int, string>();
+	Dictionary<int, string>* lines = new HashTable<int, string>();
 	Dictionary<int, string>* notSave = nullptr;
 
 	try {
-		std::chrono::high_resolution_clock::time_point inicio, fin;
+		//std::chrono::high_resolution_clock::time_point inicio, fin;
 		openFile(file, fileName);
 		openFile(ignoreFile, "Libros/ignorar.txt");
-		inicio = obtenerTiempoActual();
+		//inicio = obtenerTiempoActual();
 		processLinePerLine(file, book, abcLetters, lowerCaseLetters, lines);
-
 		processLinePerLine(ignoreFile, bookToIgnore, abcLetters, lowerCaseLetters, notSave);
-		fin = obtenerTiempoActual();
-		imprimirDiferenciaTiempo(inicio, fin);
-
+		//fin = obtenerTiempoActual();
+		//imprimirDiferenciaTiempo(inicio, fin);
 
 		int option = -1;
 		while (option != 0) {
+			printNewPage();
 
-			option = inputInt("Seleccione una opción:\n"
+			option = inputInt("<<--------------------------------------------------------------------------------------------------------->>\n"
+				"\t\t\t\t\t\t<<<MENU>>> \n"
+				"<<--------------------------------------------------------------------------------------------------------->>\n"
+				"Seleccione una opción:\n"
 				"1. Consultar por prefijo.\n"
 				"2. Consultar por palabra.\n"
 				"3. Consultar por cantidad de letras.\n"
@@ -485,25 +575,29 @@ int main() {
 				cout << "Muchas gracias por usar nuestros servicios." << endl;
 				break;
 			case 1:
-				consultarPorPrefijo(book, lowerCaseLetters, seleccionarModoImpresion());
+				printNewPage();
+				consultarPorPrefijo(book, lowerCaseLetters, seleccionarModoImpresion(), lines);
 				break;
 			case 2:
+				printNewPage();
 				consultarPorPalabra(book, lowerCaseLetters, lines, seleccionarModoImpresion());
 				break;
 			case 3:
-				consultarPorCantidadLetras(book, seleccionarModoImpresion());
+				printNewPage();
+				consultarPorCantidadLetras(book, seleccionarModoImpresion(),lines);
 				break;
 			case 4:
-				mostrarTopPalabras(book, bookToIgnore, seleccionarModoImpresion());
+				printNewPage();
+				mostrarTopPalabras(book, bookToIgnore, seleccionarModoImpresion(), lines);
 				break;
 			case 5:
+				printNewPage();
 				cargarArchivo(book, lines, file, fileName, abcLetters, lowerCaseLetters);
 				break;
 			default:
 				cout << "Opción no válida. Por favor, ingrese un número entre 1 y 5." << endl;
 				break;
 			}
-
 			waitAndJump();
 		}
 	}
