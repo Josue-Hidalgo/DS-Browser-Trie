@@ -488,7 +488,7 @@ static void mostrarTopPalabras(Trie* book, Trie* bookToIgnore, PrintMode printMo
 
 	//imprimirDiferenciaTiempo(inicio, obtenerTiempoActual());
 }
-static void cargarArchivo(Trie* book, Dictionary<int, string>* lines, ifstream& file, string& fileName,
+static void cargarArchivo(Trie*& book, Dictionary<int, string>*& lines, ifstream& file, string& fileName,
 	Dictionary<char, char>* abcLetters, Dictionary<char, char>* lowerCaseLetters) {
 
 	//std::chrono::high_resolution_clock::time_point inicio = obtenerTiempoActual();

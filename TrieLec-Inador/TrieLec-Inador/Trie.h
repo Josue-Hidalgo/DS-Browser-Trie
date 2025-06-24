@@ -93,7 +93,7 @@ private:
 
 	void getAllWordsWithFrequencyAux(TrieNode* current, string prefix, List<KVPair<string, int>>* result) {
 		if (current->isFinal) {
-			int count = current->lines->getSize();
+			int count = current->wordLines->getSize();
 			KVPair<string, int> pair(prefix, count);
 			result->append(pair);
 		}
