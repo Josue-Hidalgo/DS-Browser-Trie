@@ -1,4 +1,4 @@
-# Browser-Trie-DS #
+# Browser-Trie #
 - C++ Compiler (Required)
 - Visual Studio
 
